@@ -1,0 +1,65 @@
+baseURL: "https://lukelittle.com/"
+title: "Luke Little"
+languageCode: "en"
+theme: "PaperMod"
+
+# Pagination
+pagination:
+  pagerSize: 10
+
+params:
+  env: production
+  description: "I build fun things."
+  author: "Luke Little"
+  
+  # Enable dark mode by default
+  defaultTheme: "dark"
+  
+  # Disable theme toggle (always dark)
+  disableThemeToggle: true
+  
+  # Social icons
+  socialIcons:
+    - name: "bluesky"
+      url: "https://bsky.app/profile/lukelittle.com"
+    - name: "github"
+      url: "https://github.com/lukelittle"
+
+  # Show post metadata
+  ShowReadingTime: true
+  ShowPostNavLinks: false
+  ShowBreadCrumbs: false
+  ShowCodeCopyButtons: true
+  ShowShareButtons: false
+
+# Output formats
+outputs:
+  home:
+    - HTML
+    - RSS
+
+# Taxonomies
+taxonomies:
+  tag: tags
+  category: categories
+
+# Markup configuration
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: monokai
+
+# Menu
+menu:
+  main:
+    - name: Posts
+      url: /posts/
+      weight: 10
+    - name: About
+      url: /about/
+      weight: 20
+    - name: Tags
+      url: /tags/
+      weight: 30
