@@ -43,6 +43,11 @@ output "acm_certificate_validation_records" {
   }
 }
 
+output "github_actions_role_arn" {
+  description = "ARN of the IAM role for GitHub Actions - ADD THIS TO GITHUB SECRETS"
+  value       = aws_iam_role.github_actions.arn
+}
+
 output "route53_dns_instructions" {
   description = "Instructions for Route 53 DNS setup"
   value = <<-EOT
