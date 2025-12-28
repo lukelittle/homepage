@@ -12,7 +12,7 @@ cover:
 
 Back in November, I was preparing for the Cracking the Cloud presentation at UNC Charlotte. I needed a way to explain how the cloud fundamentally changed what's possible on the internet—not through abstract concepts, but through something students could immediately relate to.
 
-That's when I remembered **thomasgamedocs**.
+That's when I remembered **Thomas Game Docs**.
 
 If you've never heard of her: she's a YouTuber who makes incredibly well-produced video essays about video games. And she sometimes runs surveys asking her audience things like "Who's the LEAST popular Pokémon?" or "Who's the LEAST popular Animal Crossing villager?"
 
@@ -42,7 +42,7 @@ That's what I wanted students to understand. Not that AWS has a lot of services.
 
 ## The demo: a survey students could actually participate in
 
-To drive the point home, I didn't just talk about thomasgamedocs surveys.
+To drive the point home, I didn't just talk about Thomas Game Docs surveys.
 
 I had the students take one.
 
@@ -432,7 +432,7 @@ They can delete everything and recreate it in minutes. That alone teaches more t
 
 ## How does this compare to the Heroku version?
 
-Remember the Flask app I built for thomasgamedocs' Pokémon survey?
+Remember the Flask app I built for Thomas Game Docs' Pokémon survey?
 
 I monitored that deployment closely. Every time she dropped an announcement on social media—Twitter, YouTube community posts, etc—I watched the app response time blow up. We were constantly aware that we were one viral tweet away from needing to manually scale the Heroku dyno or upgrade the database.
 
@@ -469,7 +469,7 @@ Which matters, because students shouldn't need a credit card panic attack to lea
 
 The entire project is open source and designed to be broken, modified, and rebuilt:
 
-👉 **[github.com/lukelittle/cracking-the-cloud](https://github.com/lukelittle/cracking-the-cloud)**
+**[github.com/lukelittle/cracking-the-cloud](https://github.com/lukelittle/cracking-the-cloud)**
 
 ---
 
