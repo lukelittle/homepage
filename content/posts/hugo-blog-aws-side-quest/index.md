@@ -5,6 +5,9 @@ draft: false
 tags: ["AWS", "Hugo", "CloudFront", "Terraform", "infrastructure"]
 categories: ["engineering"]
 description: "I tried to launch a Hugo site on AWS and ended up doing four hours of DNS archaeology and CloudFront forensics."
+cover:
+    image: "hugo-blog-aws-side-quest.png"
+    alt: "Hugo Blog AWS Architecture Diagram"
 ---
 
 Recently I came across another engineer's personal blog — clean layout, good typography, that "I actually finish my side projects" energy — and it pushed me to finally build one of my own.
@@ -22,26 +25,48 @@ Simple enough — except CloudFront doesn't have `.htaccess` or Apache-style rew
 
 The fix is a **CloudFront Function** on `viewer-request`:
 
-- check the `Host` header  
-- if it equals `www.lukelittle.com`, return a 301 redirect  
-- send the user to the apex domain while preserving the URI
+```mermaid
+sequenceDiagram
+    participant User as 👤 User Browser
+    participant CF as ☁️ CloudFront
+    participant Func as ⚡ CloudFront Function
+    
+    User->>CF: GET https://www.lukelittle.com/
+    CF->>Func: Viewer Request Event
+    Note over Func: Check host header<br/>host === 'www.lukelittle.com'
+    Func-->>CF: 301 Redirect
+    Note over Func: Location: https://lukelittle.com/
+    CF-->>User: 301 Moved Permanently
+    User->>CF: GET https://lukelittle.com/
+    Note over User: Browser follows redirect
+    CF-->>User: 200 OK (homepage)
+```
 
-In pseudo-JavaScript:
+Here's the actual CloudFront Function code:
 
-```js
-if (host === 'www.lukelittle.com') {
-    return {
-        statusCode: 301,
-        headers: {
-            location: { value: 'https://lukelittle.com' + request.uri }
-        }
-    };
+```javascript
+function handler(event) {
+    var request = event.request;
+    var host = request.headers.host.value;
+    
+    // Redirect www to apex domain
+    if (host === 'www.lukelittle.com') {
+        return {
+            statusCode: 301,
+            statusDescription: 'Moved Permanently',
+            headers: {
+                location: { value: 'https://lukelittle.com' + request.uri }
+            }
+        };
+    }
+    
+    return request;
 }
 ```
 
-CloudFront Functions are perfect for this because they run at the edge and don't require a Lambda, bucket change, or origin rewrite.
+CloudFront Functions are perfect for this because they run at the edge, cost almost nothing (you get 2 million free invocations per month), and don't require Lambda, bucket changes, or origin rewrites. They execute in under a millisecond, which means your redirect happens before the user even realizes they typed `www`.
 
-That part was easy.
+That part was easy. The next part was not.
 
 ---
 
@@ -57,17 +82,58 @@ Hugo outputs directories like:
 Apache and Nginx automatically serve `index.html` when you access `/posts/`.  
 CloudFront does not. It will happily 404 unless you rewrite the URI yourself.
 
-So I added a second bit of logic:
+Here's what's happening under the hood:
 
-```js
-if (uri.endsWith('/')) {
-    request.uri += 'index.html';
-} else if (!uri.includes('.')) {
-    request.uri += '/index.html';
+```mermaid
+sequenceDiagram
+    participant User as 👤 User Browser
+    participant CF as ☁️ CloudFront
+    participant Func as ⚡ CloudFront Function
+    participant S3 as 🪣 S3 Bucket
+    
+    User->>CF: GET https://lukelittle.com/posts/cracking-the-cloud
+    CF->>Func: Viewer Request Event
+    Note over Func: URI: /posts/cracking-the-cloud<br/>No extension detected<br/>!uri.includes('.')
+    Func->>Func: Append /index.html
+    Note over Func: New URI:<br/>/posts/cracking-the-cloud/index.html
+    Func-->>CF: Modified Request
+    CF->>S3: GetObject<br/>/posts/cracking-the-cloud/index.html
+    S3-->>CF: HTML Content
+    CF-->>User: 200 OK (post content)
+    Note over CF: Cache for 1 hour
+```
+
+So I added this logic to the same CloudFront Function:
+
+```javascript
+function handler(event) {
+    var request = event.request;
+    var uri = request.uri;
+    var host = request.headers.host.value;
+    
+    // Redirect www to apex domain
+    if (host === 'www.lukelittle.com') {
+        return {
+            statusCode: 301,
+            statusDescription: 'Moved Permanently',
+            headers: {
+                location: { value: 'https://lukelittle.com' + uri }
+            }
+        };
+    }
+    
+    // Append index.html for clean URLs
+    if (uri.endsWith('/')) {
+        request.uri += 'index.html';
+    } else if (!uri.includes('.')) {
+        request.uri += '/index.html';
+    }
+    
+    return request;
 }
 ```
 
-That makes CloudFront behave like a normal web server from 2008. Hugo pages immediately started working.
+Now CloudFront behaves like a normal web server circa 2008. Hugo pages immediately started working.
 
 For a moment.
 
@@ -110,6 +176,51 @@ Support asked me to add a TXT record to prove I owned the domain. I added it in 
 
 ---
 
+## How deployment actually works
+
+Once I got the infrastructure sorted, I needed a deployment pipeline. GitHub Actions + OIDC federation makes this dead simple:
+
+```mermaid
+sequenceDiagram
+    participant Dev as 👨‍💻 Developer
+    participant GH as GitHub
+    participant GHA as GitHub Actions
+    participant IAM as 🔑 IAM Role
+    participant S3 as 🪣 S3 Bucket
+    participant CFront as ☁️ CloudFront
+    
+    Dev->>GH: git push origin main
+    GH->>GHA: Trigger workflow
+    Note over GHA: hugo --minify
+    GHA->>GHA: Build static site
+    
+    GHA->>IAM: AssumeRoleWithWebIdentity
+    Note over IAM: OIDC Federation<br/>Verify GitHub token
+    IAM-->>GHA: Temporary credentials
+    
+    GHA->>S3: aws s3 sync ./public s3://bucket/
+    Note over S3: Upload HTML, CSS, JS<br/>--delete flag removes old files
+    S3-->>GHA: Sync complete
+    
+    GHA->>CFront: CreateInvalidation --paths "/*"
+    Note over CFront: Clear edge cache<br/>Force fresh content
+    CFront-->>GHA: Invalidation ID
+    
+    Note over Dev,CFront: Deployment complete ✅<br/>New content live globally
+```
+
+Here's what makes this beautiful:
+
+**No long-lived credentials.** GitHub Actions uses OIDC to assume an IAM role, gets temporary credentials that expire in an hour, and those credentials only work for this specific repo. If someone compromises the GitHub Actions environment, they get access for 60 minutes max—and only to deploy this blog. Not exactly a treasure trove.
+
+**Hugo builds in ~200ms.** Static site generators are fast when your entire site fits in memory. No database queries, no server-side rendering, just Markdown → HTML and done.
+
+**S3 sync is smart.** It only uploads files that changed. New post? Upload one file. Tweak CSS? Upload one file. CloudFront invalidation clears the edge cache, so every visitor gets fresh content within seconds.
+
+**Global deployment in under a minute.** Push to main → build → sync → invalidate → live. The entire pipeline runs faster than most people can brew coffee.
+
+---
+
 ## And now the site actually exists
 
 Despite writing constantly — deep dives, rants, slides, Data Pour episodes — I've never had a single place to put any of it. Everything has been scattered across GitHub repos, Slack threads, LinkedIn posts, and random folders.
@@ -123,11 +234,26 @@ No patching.
 No maintenance.  
 Just HTML, a CDN, and vibes.
 
+The whole stack:
+- **Hugo** for static site generation
+- **S3** for object storage
+- **CloudFront** for CDN + edge functions
+- **Route 53** for DNS
+- **ACM** for SSL certificates
+- **GitHub Actions** for CI/CD
+- **Terraform** for infrastructure as code
+
+Total monthly cost: ~$0.50 for Route 53 hosted zone. Everything else fits in free tier.
+
 ---
 
 ## The unexpected benefit
 
 Honestly, getting stuck for a few hours was probably good for me. I had to slow down, re-read documentation, and remember exactly how CloudFront, ACM, and Route 53 interact — instead of relying on half-remembered muscle memory.
+
+Building this site reminded me why I got into infrastructure in the first place: you can take a bunch of managed services, wire them together thoughtfully, and end up with something that just works. No servers to patch, no databases to tune, no midnight pages about memory leaks.
+
+Just a website that loads fast, costs nothing, and requires zero maintenance.
 
 Not the night I planned, but not wasted either.
 
