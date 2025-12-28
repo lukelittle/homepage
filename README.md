@@ -2,7 +2,7 @@
 
 My personal blog hosted at [lukelittle.com](https://lukelittle.com)
 
-Hugo + AWS + GitHub Actions = ~$3/year hosting 🎉
+Hugo + AWS + GitHub Actions = ~$3/year hosting
 
 ## Daily Use
 
@@ -78,5 +78,3 @@ About $0.25/month. Mostly S3 storage.
 ## For Visitors
 
 Feel free to browse the code to see how it's built. This is how I run a simple blog on AWS for pennies. The Terraform configs and GitHub Actions setup might be useful if you're building something similar.
-
-Just note: everything here is copyrighted (see LICENSE). You can learn from it, but don't just copy-paste everything.
