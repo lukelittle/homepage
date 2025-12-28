@@ -1,9 +1,15 @@
 # ========================================
+# Get Current AWS Account ID
+# ========================================
+
+data "aws_caller_identity" "current" {}
+
+# ========================================
 # S3 Bucket for Static Website Hosting
 # ========================================
 
 locals {
-  account_id  = "168737286209"
+  account_id  = data.aws_caller_identity.current.account_id
   bucket_name = "${local.account_id}-${var.aws_region}-homepage"
 }
 

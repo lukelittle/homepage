@@ -14,7 +14,27 @@ Recently I came across another engineer's personal blog — clean layout, good t
 
 I picked Hugo because I like Go, and because using Jekyll in 2025 feels like opting into pain. I briefly considered Ghost, remembered it either requires paying Ghost or hosting Ghost, and closed the tab. And since I'm "the AWS guy," it felt morally necessary to deploy the whole thing on AWS. Maybe I'd even use Kiro if I felt extra fancy.
 
+For context: **Hugo** and **Jekyll** are both static site generators—tools that convert Markdown files into HTML at build time. Jekyll, written in Ruby, was the OG choice for GitHub Pages and still powers thousands of blogs. But it's slow, requires managing Ruby dependencies, and feels dated. Hugo, written in Go, is blazingly fast (builds in milliseconds), has a single binary with zero dependencies, and handles large sites without breaking a sweat. Both produce the same outcome—static HTML you can throw on a CDN—but Hugo does it in a fraction of the time and with far less friction.
+
 So I wrote some Terraform, vibe-coded a theme, deployed it, and immediately remembered that I don't build personal websites very often.
+
+---
+
+## The Architecture
+
+Before diving into the problems I hit, here's what the final architecture looks like.
+
+It's a classic serverless static site setup: **Route 53** handles DNS, pointing the domain to a **CloudFront** distribution. CloudFront sits in front of an **S3 bucket** that stores all the static files—HTML, CSS, JavaScript, images. The bucket is private; CloudFront is the only thing allowed to read from it via an Origin Access Identity.
+
+Here's where it gets slightly more interesting: attached to CloudFront is a **CloudFront Function**—a lightweight JavaScript function that runs at the edge, modifying incoming requests before they hit the origin. This function handles two things: redirecting `www.lukelittle.com` to the apex domain, and rewriting clean URLs (like `/posts/my-article`) to their actual paths (`/posts/my-article/index.html`). 
+
+SSL certificates come from **AWS Certificate Manager** and are automatically attached to CloudFront. The whole thing is defined in **Terraform**, and deployment happens via **GitHub Actions**—push to main, Hugo builds the site, the output gets synced to S3, and CloudFront's cache gets invalidated.
+
+The request flow is straightforward: user hits the domain → Route 53 resolves it to CloudFront → CloudFront invokes the edge function → function rewrites the request if needed → CloudFront fetches from S3 (or serves from cache) → content gets delivered globally from the nearest edge location.
+
+Clean. Simple. Serverless. Costs about $0.50/month for the Route 53 hosted zone. Everything else fits in free tier.
+
+Now, the problems.
 
 ---
 
@@ -258,3 +278,8 @@ Just a website that loads fast, costs nothing, and requires zero maintenance.
 Not the night I planned, but not wasted either.
 
 Anyway — the blog is live now. Hopefully the next update doesn't require another round of DNS archaeology or CloudFront forensics.
+
+---
+
+**Want to see the code?** The entire infrastructure setup is open source:  
+[github.com/lukelittle/homepage](https://github.com/lukelittle/homepage)
