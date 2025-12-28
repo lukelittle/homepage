@@ -118,9 +118,7 @@ data "aws_iam_policy_document" "github_actions_cloudfront" {
       "cloudfront:GetInvalidation",
     ]
 
-    resources = [
-      aws_cloudfront_distribution.website.arn,
-    ]
+    resources = ["*"]
   }
 }
 

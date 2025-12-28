@@ -111,8 +111,7 @@ resource "aws_cloudfront_distribution" "website" {
   comment             = "CloudFront distribution for ${var.domain_name}"
   default_root_object = "index.html"
   price_class         = var.cloudfront_price_class
-  # Aliases must be added manually in AWS Console due to existing DNS conflict
-  # aliases             = concat([var.domain_name], var.alternative_domain_names)
+  aliases             = concat([var.domain_name], var.alternative_domain_names)
 
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name

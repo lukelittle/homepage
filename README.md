@@ -1,88 +1,82 @@
-# Luke Little's Personal Blog
+# Luke Little's Blog
 
-Personal blog built with Hugo and deployed to AWS.
+My personal blog hosted at [lukelittle.com](https://lukelittle.com)
 
-**Live Site:** https://lukelittle.com
+Hugo + AWS + GitHub Actions = ~$3/year hosting 🎉
+
+## Daily Use
+
+### Writing a new post
+
+```bash
+hugo new posts/my-post-title/index.md
+hugo server -D  # preview at localhost:1313
+```
+
+Edit in `content/posts/`, then push to deploy:
+
+```bash
+git add .
+git commit -m "New post: whatever"
+git push
+```
+
+GitHub Actions handles the rest (build → upload to S3 → invalidate CloudFront).
+
+### Running locally
+
+```bash
+hugo server -D
+```
+
+Visit http://localhost:1313
 
 ## Tech Stack
 
-- **Static Site Generator:** [Hugo](https://gohugo.io)
-- **Theme:** [PaperMod](https://github.com/adityatelange/hugo-PaperMod)
-- **Hosting:** AWS S3 + CloudFront
-- **Infrastructure:** Terraform
-- **Cost:** ~$0.50/month
+- **Hugo** - Static site generator (crazy fast)
+- **PaperMod** - Clean, minimal theme
+- **AWS S3 + CloudFront** - Hosting + CDN
+- **Terraform** - Infrastructure as code
+- **GitHub Actions** - Automated deployments with OIDC
 
-## Quick Start
+## Infrastructure
 
-### Local Development
+Everything's in AWS:
+- S3 bucket stores the files
+- CloudFront serves them globally with HTTPS
+- ACM provides the SSL cert (free)
+- Route 53 handles DNS
 
-```bash
-# Install Hugo (macOS)
-brew install hugo
+Deployed via Terraform. See [`terraform/README.md`](terraform/README.md) if you need to modify infrastructure.
 
-# Clone repo
-git clone https://github.com/lukelittle/homepage.git
-cd homepage
-
-# Start local server
-hugo server -D
-
-# Visit http://localhost:1313
-```
-
-### Create New Post
-
-```bash
-hugo new posts/my-new-post/index.md
-```
-
-Edit the file in `content/posts/my-new-post/index.md`, then preview with `hugo server -D`.
-
-### Deploy to Production
-
-```bash
-./scripts/deploy.sh
-```
-
-This builds the site, uploads to S3, and invalidates the CloudFront cache.
+Automated deployment via GitHub Actions. See [`GITHUB_ACTIONS_SETUP.md`](GITHUB_ACTIONS_SETUP.md) for setup details.
 
 ## Project Structure
 
 ```
 .
-├── content/          # Blog posts and pages
-├── static/           # Static assets (images, etc.)
-├── themes/           # Hugo theme (PaperMod)
-├── terraform/        # AWS infrastructure (S3, CloudFront, ACM)
-├── scripts/          # Deployment automation
-├── public/           # Built site (generated, not committed)
-├── config.yaml       # Hugo configuration
-└── DEPLOYMENT.md     # Full deployment guide
+├── content/              # Blog posts and pages
+├── static/               # Images, CSS, etc.
+├── themes/PaperMod/      # Theme (git submodule)
+├── terraform/            # AWS infrastructure
+├── .github/workflows/    # Deployment automation
+└── config.yaml           # Hugo config
 ```
 
-## Infrastructure
+## Emergency Manual Deploy
 
-The blog is hosted on AWS using:
-
-- **S3 Bucket:** Stores static files
-- **CloudFront:** Global CDN with HTTPS
-- **ACM:** Free SSL certificate
-- **Route 53:** DNS (managed separately)
-
-See [`DEPLOYMENT.md`](DEPLOYMENT.md) for complete deployment instructions.
-
-## Terraform
-
-Infrastructure is managed with Terraform. See [`terraform/README.md`](terraform/README.md) for details.
+If GitHub Actions is down:
 
 ```bash
-cd terraform
-terraform init
-terraform plan
-terraform apply
+./scripts/deploy.sh
 ```
 
-## License
+## Cost
 
-Content: © Luke Little  
-Code: MIT License
+About $0.25/month. Mostly S3 storage.
+
+## For Visitors
+
+Feel free to browse the code to see how it's built. This is how I run a simple blog on AWS for pennies. The Terraform configs and GitHub Actions setup might be useful if you're building something similar.
+
+Just note: everything here is copyrighted (see LICENSE). You can learn from it, but don't just copy-paste everything.
