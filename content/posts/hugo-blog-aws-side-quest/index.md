@@ -18,8 +18,6 @@ For context: **Hugo** and **Jekyll** are both static site generators—tools tha
 
 So I wrote some Terraform, vibe-coded a theme, deployed it, and immediately remembered that I don't build personal websites very often.
 
----
-
 ## The Architecture
 
 Before diving into the problems I hit, here's what the final architecture looks like.
@@ -35,8 +33,6 @@ The request flow is straightforward: user hits the domain → Route 53 resolves 
 Clean. Simple. Serverless. Costs about $0.50/month for the Route 53 hosted zone. Everything else fits in free tier.
 
 Now, the problems.
-
----
 
 ## First realization: `www` doesn't redirect itself
 
@@ -87,8 +83,6 @@ function handler(event) {
 CloudFront Functions are perfect for this because they run at the edge, cost almost nothing (you get 2 million free invocations per month), and don't require Lambda, bucket changes, or origin rewrites. They execute in under a millisecond, which means your redirect happens before the user even realizes they typed `www`.
 
 That part was easy. The next part was not.
-
----
 
 ## Second realization: CloudFront does *not* assume `index.html`
 
@@ -156,8 +150,6 @@ function handler(event) {
 Now CloudFront behaves like a normal web server circa 2008. Hugo pages immediately started working.
 
 For a moment.
-
----
 
 ## Where everything went off the rails
 
@@ -239,8 +231,6 @@ Here's what makes this beautiful:
 
 **Global deployment in under a minute.** Push to main → build → sync → invalidate → live. The entire pipeline runs faster than most people can brew coffee.
 
----
-
 ## And now the site actually exists
 
 Despite writing constantly — deep dives, rants, slides, Data Pour episodes — I've never had a single place to put any of it. Everything has been scattered across GitHub repos, Slack threads, LinkedIn posts, and random folders.
@@ -265,8 +255,6 @@ The whole stack:
 
 Total monthly cost: ~$0.50 for Route 53 hosted zone. Everything else fits in free tier.
 
----
-
 ## The unexpected benefit
 
 Honestly, getting stuck for a few hours was probably good for me. I had to slow down, re-read documentation, and remember exactly how CloudFront, ACM, and Route 53 interact — instead of relying on half-remembered muscle memory.
@@ -278,8 +266,6 @@ Just a website that loads fast, costs nothing, and requires zero maintenance.
 Not the night I planned, but not wasted either.
 
 Anyway — the blog is live now. Hopefully the next update doesn't require another round of DNS archaeology or CloudFront forensics.
-
----
 
 **Want to see the code?** The entire infrastructure setup is open source:  
 [github.com/lukelittle/homepage](https://github.com/lukelittle/homepage)

@@ -55,8 +55,6 @@ They voted. They saw the results update in real-time. And then I showed them **e
 
 That survey? It's the same repo I'm writing about now: [cracking-the-cloud](https://github.com/lukelittle/cracking-the-cloud).
 
----
-
 ## The architecture (small, but real)
 
 ![Architecture Diagram](diagram.png)
@@ -81,8 +79,6 @@ User clicks a button → JavaScript calls the API → API Gateway invokes Lambda
 
 Simple. Explicit. Observable.
 
----
-
 ## Why static frontend + API (on purpose)
 
 I didn't use React.  
@@ -103,8 +99,6 @@ No build steps. No transpilation. No abstractions hiding what's really going on.
 Once you understand how a browser talks to an API using vanilla JavaScript, **then** you can add React, TypeScript, and all the modern tooling. But you'll know what those tools are doing for you—not just that they work.
 
 The frontend's job here is to show you the fundamentals, not teach you the latest framework.
-
----
 
 ## The Lambdas (three, on purpose)
 
@@ -133,8 +127,6 @@ This lets students see how permissions map to behavior.
 - The **reset** function can delete, but nothing else
 
 You don't need a lecture on least privilege when the code makes it obvious.
-
----
 
 ## How voting actually works
 
@@ -215,8 +207,6 @@ def handler(event, context):
 ```
 
 Twenty lines of code. No ORM. No database migrations. No connection pooling. Just write to DynamoDB and return a response.
-
----
 
 ## How results actually work
 
@@ -302,8 +292,6 @@ Students immediately see three concepts:
 
 This naturally leads to questions like "how would you make this more efficient?" which is exactly where you want students' brains to go.
 
----
-
 ## How reset actually works
 
 The reset function is the most dangerous one in the app—and also the most instructive:
@@ -388,8 +376,6 @@ Students don't need to know all of that on day one, but they can see that deleti
 
 **Important note:** In a real app, you'd absolutely add authentication and authorization here. This function is intentionally unprotected for teaching purposes—it demonstrates the mechanics of batch operations without the complexity of auth flows.
 
----
-
 ## DynamoDB (intentionally unsexy)
 
 The DynamoDB table is **boring by design**.
@@ -415,8 +401,6 @@ Once students are comfortable, *then* you add:
 - cost modeling
 
 But not on day one.
-
----
 
 ## Terraform as the real curriculum
 
@@ -449,8 +433,6 @@ The infrastructure would have scaled to meet demand and then scaled back down wh
 
 That's the difference between "serverless" and "server-you-manage-less."
 
----
-
 ## Costs (because someone always asks)
 
 - **S3**: pennies
@@ -462,8 +444,6 @@ That's the difference between "serverless" and "server-you-manage-less."
 **Total monthly cost for light usage**: effectively $0.
 
 Which matters, because students shouldn't need a credit card panic attack to learn cloud fundamentals.
-
----
 
 ## If you want to fork it
 
