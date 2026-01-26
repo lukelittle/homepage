@@ -43,6 +43,10 @@ taxonomies:
   tag: tags
   category: categories
 
+# Permalinks - date-based URLs with posts prefix for year/month archives
+permalinks:
+  posts: "/posts/:year/:month/:title/"
+
 # Markup configuration
 markup:
   goldmark:
