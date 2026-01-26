@@ -1,10 +1,10 @@
 ---
 title: "FastMCP and the Vinyl Collection Chatbot: Serverless Agentic AI in Action"
-date: 2026-01-17T09:00:00-05:00
+date: 2026-01-24T09:00:00-05:00
 draft: false
 tags: ["AWS", "MCP", "FastMCP", "AI", "frontier-agents", "agents", "integration", "AgentCore", "Python", "Bedrock"]
 categories: ["engineering"]
-description: "How AWS Frontier Agents actually talk to your enterprise systems—and why this matters more than the agents themselves"
+description: "Building AI agent integrations with FastMCP and the Model Context Protocol—the universal standard that makes agents actually useful in production"
 cover:
     image: "fastmcp-vinyl-collection-chatbot-serverless-agentic-ai-action.png"
     alt: "FastMCP and the Vinyl Collection Chatbot: Serverless Agentic AI in Action"
@@ -13,72 +13,13 @@ cover:
 
 
 
-## The chatbot that convinced me FastMCP matters
+## What is the Model Context Protocol?
 
-I built a serverless chatbot that answers questions about my vinyl collection. Ask it "What Grimes records do I have?" and it queries a CSV file in S3, parses my Discogs export, and returns results. Ask it "What is vinyl?" and it just answers from general knowledge. The bot decides when to use tools and when to rely on its training data.
-
-The interesting part isn't the chatbot—it's how stupidly easy FastMCP made the integration. Here's the complete implementation of the tool that queries my vinyl collection:
-
-```python
-from mcp.server.fastmcp import FastMCP
-
-# Create MCP server
-mcp = FastMCP("vinyl-collection-server")
-
-# Define tool with decorator
-@mcp.tool()
-def query_vinyl_collection(query_type: str, search_term: str, limit: int = 10) -> str:
-    """
-    Query Luke's vinyl record collection.
-
-    Args:
-        query_type: One of: artist, label, year, title, all
-        search_term: What to search for
-        limit: Max results (default 10)
-    """
-    # Download CSV from S3
-    response = s3_client.get_object(Bucket=DATA_BUCKET, Key='discogs.csv')
-    records = parse_csv(response['Body'])
-
-    # Filter records
-    matches = filter_records(records, query_type, search_term)
-
-    # Return formatted results
-    return format_results(matches[:limit])
-```
-
-That's it. No JSON schema writing. No protocol handling. No tool registration boilerplate. FastMCP generates the schema from type hints and docstrings, handles the Model Context Protocol communication, converts everything to Bedrock's format, and manages tool execution. You write the business logic. FastMCP handles everything else.
-
-The whole system—frontend, Lambda, Bedrock integration, S3 data access—deployed in under two minutes using the deploy script included in the repo. This isn't a toy example. It's running in production, costs about fifteen dollars a month, and demonstrates why FastMCP is becoming the standard way to build tools for AI agents.
-
----
-
-## Architecture Overview
-
-```mermaid
-graph TD
-    A[User in Browser] --> B[API Gateway]
-    B --> C[Lambda Function]
-    C --> D[FastMCP Server]
-    D --> E[S3: discogs.csv]
-    C --> F[Bedrock: Claude 3.5]
-    F -->|Tool Use| D
-    D -->|Tool Result| F
-    F --> G[Final Response]
-    G --> A
-```
-
-This is the full loop: user asks a question, Bedrock decides whether to use a tool, FastMCP executes it, and the result is returned—all serverless.
-
-## Why this works: The Model Context Protocol
-
-FastMCP works because it implements the Model Context Protocol—the open standard for connecting AI agents to external systems. 
-
-If you've read my previous articles on AWS DevOps Agent, Security Agent, and Kiro, you've seen what these frontier agents do. This article explains how they actually work—the protocol layer that makes integration possible. More importantly, it shows how you can extend these agents to work with your proprietary systems using FastMCP.
-
-Think of MCP as HTTP for AI agents, Docker for tool integration, or OpenAPI for agentic workflows. It's standardized communication that lets you write a tool once and use it everywhere.
+The Model Context Protocol (MCP) is an open standard for connecting AI agents to external systems. Think of it as a universal adapter that lets any AI agent talk to any tool or data source without custom integration code.
 
 Anthropic announced MCP in November 2024 and donated it to the Linux Foundation's Agentic AI Foundation a month later. The adoption has been swift: OpenAI integrated it into ChatGPT, Google DeepMind uses it for Gemini agents, AWS built AgentCore around it, and development tools like Zed, Sourcegraph, Replit, and Codeium all support it. In just a few months, the community has built thousands of MCP servers. The protocol has become the de-facto standard for agent-to-tool communication.
+
+If you've read my previous articles on AWS DevOps Agent, Security Agent, and Kiro, you've seen what these frontier agents do. This article explains how they actually work—the protocol layer that makes integration possible. More importantly, it shows how you can extend these agents to work with your proprietary systems.
 
 ## The N×M integration problem
 
@@ -474,6 +415,96 @@ def read_file(path: str, ctx: Context[ServerSession, None]) -> str:
     with open(path, 'r') as f:
         return f.read()
 ```
+## Case study: Vinyl collection chatbot
+
+To see how easy FastMCP makes building real-world integrations, I built a serverless chatbot that answers questions about my vinyl collection. The data comes from a Discogs export—a CSV file containing my complete record collection that I store in S3.
+
+Ask it "What Grimes records do I have?" and it queries the CSV, parses the Discogs data, and returns results. Ask it "What is vinyl?" and it just answers from general knowledge. The bot intelligently decides when to use tools and when to rely on its training data.
+
+Here's the complete implementation of the MCP server that queries the Discogs collection data:
+
+```python
+from fastmcp import FastMCP
+import boto3
+import csv
+from io import StringIO
+
+# Initialize FastMCP server
+mcp = FastMCP("vinyl-collection-server")
+
+# S3 client for accessing Discogs export
+s3_client = boto3.client('s3')
+DATA_BUCKET = "my-vinyl-collection"
+
+@mcp.tool()
+def query_vinyl_collection(query_type: str, search_term: str, limit: int = 10) -> str:
+    """
+    Query Luke's vinyl record collection from Discogs export data.
+
+    Args:
+        query_type: One of: artist, label, year, title, all
+        search_term: What to search for
+        limit: Max results (default 10)
+    """
+    # Download Discogs CSV export from S3
+    response = s3_client.get_object(Bucket=DATA_BUCKET, Key='discogs.csv')
+    csv_content = response['Body'].read().decode('utf-8')
+    
+    # Parse CSV
+    records = []
+    csv_reader = csv.DictReader(StringIO(csv_content))
+    for row in csv_reader:
+        records.append(row)
+    
+    # Filter based on query type
+    matches = []
+    for record in records:
+        if query_type == "artist" and search_term.lower() in record['Artist'].lower():
+            matches.append(record)
+        elif query_type == "label" and search_term.lower() in record['Label'].lower():
+            matches.append(record)
+        elif query_type == "year" and search_term in record['Released']:
+            matches.append(record)
+        elif query_type == "title" and search_term.lower() in record['Title'].lower():
+            matches.append(record)
+        elif query_type == "all":
+            if (search_term.lower() in record['Artist'].lower() or 
+                search_term.lower() in record['Title'].lower()):
+                matches.append(record)
+    
+    # Format results
+    results = []
+    for record in matches[:limit]:
+        results.append(
+            f"{record['Artist']} - {record['Title']} "
+            f"({record['Label']}, {record['Released']})"
+        )
+    
+    return "\n".join(results) if results else "No matches found"
+
+if __name__ == "__main__":
+    mcp.run(transport="sse", port=8080)
+```
+
+That's it. No JSON schema writing. No protocol handling. No tool registration boilerplate. FastMCP generates the schema from type hints and docstrings, handles the Model Context Protocol communication, converts everything to Bedrock's format, and manages tool execution. You write the business logic for parsing Discogs data. FastMCP handles everything else.
+
+The whole system—frontend, Lambda, Bedrock integration, S3 data access—deployed in under two minutes. This isn't a toy example. It's running in production, costs about fifteen dollars a month, and demonstrates why FastMCP is becoming the standard way to build tools for AI agents.
+
+```mermaid
+graph TD
+    A[User in Browser] --> B[API Gateway]
+    B --> C[Lambda Function]
+    C --> D[FastMCP Server]
+    D --> E[S3: discogs.csv]
+    C --> F[Bedrock: Claude 3.5]
+    F -->|Tool Use| D
+    D -->|Tool Result| F
+    F --> G[Final Response]
+    G --> A
+```
+
+This is the full loop: user asks a question, Bedrock decides whether to use a tool, FastMCP executes it against the Discogs export data, and the result is returned—all serverless.
+
 ## How AWS frontier agents use MCP
 
 Now let's connect this to the agents I've covered in previous articles. These patterns show how MCP enables coordination between specialized agents.
