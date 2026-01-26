@@ -1,5 +1,5 @@
 ---
-title: "I Built a URL Shortener with AI—Here's What Actually Happened"
+title: "15 Hours of Terraform in 3: Building with AWS Kiro"
 date: 2026-01-20T09:00:00-05:00
 draft: false
 tags: ["AWS", "serverless", "AI", "Kiro", "Lambda", "DynamoDB", "Kinesis", "Cognito", "Terraform", "URL-shortener"]
@@ -7,7 +7,7 @@ categories: ["engineering"]
 description: "Building a production-ready URL shortener with Kiro: spec-driven development, smart architecture decisions, and why AI coding assistants are game-changers"
 cover:
     image: "building-serverless-url-shortener-ai-assisted-kiro.png"
-    alt: "I Built a URL Shortener with AI—Here's What Actually Happened"
+    alt: "15 Hours of Terraform in 3: Building with AWS Kiro"
 ---
 
 At an AWS Road Show this fall, Darko Mesaros demoed a URL shortener he'd built in Rust called [krtk.rs](https://github.com/darko-mesaros/krtk). Something about watching a clean, fast URL shortener just *work* stuck with me. I've built a few of these for demos since then, but I wanted to try something different this time: build one in Python with a retro 90s vibe, and let Kiro handle most of the heavy lifting.
