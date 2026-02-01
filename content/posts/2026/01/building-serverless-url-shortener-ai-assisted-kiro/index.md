@@ -50,32 +50,7 @@ And broke the implementation into actionable tasks:
 
 Finally, it generated the complete architecture:
 
-```mermaid
-graph TB
-    User[👤 User Browser] --> CF[☁️ CloudFront]
-    CF --> S3[📦 S3 Static Website]
-    User --> APIGW[🚪 API Gateway]
-    APIGW --> Auth[🔐 Cognito User Pool]
-    APIGW --> CreateLambda[⚡ create_link Lambda]
-    APIGW --> ListLambda[⚡ list_links Lambda] 
-    APIGW --> DeleteLambda[⚡ delete_link Lambda]
-    APIGW --> RedirectLambda[⚡ redirect Lambda]
-    
-    CreateLambda --> DDB[🗄️ DynamoDB Table]
-    ListLambda --> DDB
-    DeleteLambda --> DDB
-    RedirectLambda --> DDB
-    RedirectLambda --> Kinesis[🌊 Kinesis Data Streams]
-    
-    Kinesis --> IngestLambda[⚡ visit_ingest Lambda]
-    IngestLambda --> CountLambda[⚡ count_aggregator Lambda]
-    CountLambda --> DDB
-    
-    style CF fill:#ff9999
-    style APIGW fill:#99ff99
-    style DDB fill:#cc99ff
-    style Kinesis fill:#99ffcc
-```
+![URL Shortener Architecture Diagram](url-shortener-architecture-diagram.png)
 
 This is production-grade serverless: S3 + CloudFront for the frontend, API Gateway for the REST API, Lambda for compute, DynamoDB for storage, Kinesis for event streaming.
 

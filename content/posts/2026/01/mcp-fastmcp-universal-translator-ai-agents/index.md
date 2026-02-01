@@ -490,18 +490,7 @@ That's it. No JSON schema writing. No protocol handling. No tool registration bo
 
 The whole system—frontend, Lambda, Bedrock integration, S3 data access—deployed in under two minutes. This isn't a toy example. It's running in production, costs about fifteen dollars a month, and demonstrates why FastMCP is becoming the standard way to build tools for AI agents.
 
-```mermaid
-graph TD
-    A[User in Browser] --> B[API Gateway]
-    B --> C[Lambda Function]
-    C --> D[FastMCP Server]
-    D --> E[S3: discogs.csv]
-    C --> F[Bedrock: Claude 3.5]
-    F -->|Tool Use| D
-    D -->|Tool Result| F
-    F --> G[Final Response]
-    G --> A
-```
+![Vinyl Chatbot Architecture Diagram](vinyl-chatbot-architecture.png)
 
 This is the full loop: user asks a question, Bedrock decides whether to use a tool, FastMCP executes it against the Discogs export data, and the result is returned—all serverless.
 
