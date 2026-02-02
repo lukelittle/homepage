@@ -6,8 +6,8 @@ tags: ["AWS", "MCP", "FastMCP", "AI", "frontier-agents", "agents", "integration"
 categories: ["engineering"]
 description: "Building AI agent integrations with FastMCP and the Model Context Protocol—the universal standard that makes agents actually useful in production"
 cover:
-    image: "fastmcp-vinyl-collection-chatbot-serverless-agentic-ai-action.png"
-    alt: "FastMCP and the Vinyl Collection Chatbot: Serverless Agentic AI in Action"
+    image: "vinyl-chatbot-architecture.png"
+    alt: "Architecture Diagram: FastMCP Vinyl Collection Chatbot on AWS"
 ---
 
 
