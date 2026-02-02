@@ -30,53 +30,8 @@ The traditional approach is building custom integrations. One for each pairing. 
 This is the N×M integration problem: N agents times M data sources equals N×M custom integrations. As your ecosystem grows, the complexity becomes unmanageable. Three agents talking to four services means twelve custom connectors. Ten agents and fifty systems means five hundred integrations to build and maintain.
 
 Each connector requires understanding the target system's API, building authentication flows, handling rate limits and retries, writing serialization and deserialization logic, maintaining the connector as APIs change, and rebuilding for each new agent or LLM provider. This doesn't scale.
-The N×M Integration Problem (Why MCP Exists)
-Let's visualize the traditional approach:
 
-```mermaid
-flowchart TB
-    subgraph Before MCP
-        A1[Agent A] --> SF1[Salesforce]
-        A1 --> GH1[GitHub]
-        A1 --> JR1[Jira]
-        A1 --> DD1[Datadog]
-
-        A2[Agent B] --> SF2[Salesforce]
-        A2 --> GH2[GitHub]
-        A2 --> JR2[Jira]
-        A2 --> DD2[Datadog]
-
-        A3[Agent C] --> SF3[Salesforce]
-        A3 --> GH3[GitHub]
-        A3 --> JR3[Jira]
-        A3 --> DD3[Datadog]
-    end
-```
-Every connector requires:
-
-Understanding the target system's API
-Building authentication flows
-Handling rate limits and retries
-Writing serialization/deserialization logic
-Maintaining the connector as APIs change
-Rebuilding for each new agent or LLM provider
-
-This doesn't scale. At all.
-```mermaid
-flowchart TB
-    subgraph After MCP
-        A1[Agent A] --> MCP
-        A2[Agent B] --> MCP
-        A3[Agent C] --> MCP
-
-        MCP --> SF[Salesforce MCP Server]
-        MCP --> GH[GitHub MCP Server]
-        MCP --> JR[Jira MCP Server]
-        MCP --> DD[Datadog MCP Server]
-    end
-```
-
-Build the Salesforce MCP server once. Now DevOps Agent, Security Agent, Kiro, Claude Desktop—any MCP client—can access Salesforce. No custom integration needed. This is why every major AI company adopted MCP within months of its announcement. It solves an existential scaling problem.
+With MCP, you build the Salesforce MCP server once. After that, DevOps Agent, Security Agent, Kiro, Claude Desktop—any MCP client—can access Salesforce. No custom integration needed. This is why every major AI company adopted MCP within months of its announcement. It solves an existential scaling problem.
 
 ## How MCP works: The architecture
 
