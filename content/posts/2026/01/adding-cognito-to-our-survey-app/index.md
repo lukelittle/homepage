@@ -1,5 +1,5 @@
 ---
-title: "From Zero to Hero: Adding AWS Cognito Authentication to Your Serverless App"
+title: "Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App"
 date: 2026-01-22T09:00:00-05:00
 draft: false
 tags: ["AWS", "Cognito", "Serverless", "Lambda", "Authentication", "Security"]
@@ -7,10 +7,10 @@ categories: ["engineering"]
 description: "How we added secure user authentication to our serverless survey app using AWS Cognito"
 cover:
     image: "adding-cognito-to-our-survey-app.png"
-    alt: "From Zero to Hero: Adding AWS Cognito Authentication to Your Serverless App"
+    alt: "Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App"
 ---
 
-# From Zero to Hero: Adding AWS Cognito Authentication to Your Serverless App
+# Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App
 
 Our serverless survey application is a great example of a modern cloud native application. It's fast, scalable, and cost-effective. But it's missing one critical feature: user authentication. In this post, we'll walk through how to add robust, secure authentication using AWS Cognito.
 
@@ -44,19 +44,6 @@ For our application, **AWS Cognito is the clear winner.** It provides the best b
 
 Before we add authentication, let's visualize how our serverless application currently works:
 
-```mermaid
-graph LR
-    A[User Browser] -->|HTTP Request| B[API Gateway]
-    B -->|Triggers| C[Lambda Functions]
-    C -->|Read/Write| D[DynamoDB]
-    C -->|Response| B
-    B -->|HTTP Response| A
-    
-    style A fill:#e1f5ff
-    style B fill:#fff4e1
-    style C fill:#ffe1f5
-    style D fill:#e1ffe1
-```
 
 Right now, anyone can call our API endpoints. There's no way to verify who's making the request or prevent abuse.
 
@@ -83,29 +70,6 @@ We'll use a **Cognito User Pool** to manage our users. Think of it as a user dat
 
 Here's what the authenticated architecture will look like:
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Browser
-    participant Cognito
-    participant APIGateway as API Gateway
-    participant Lambda
-    participant DynamoDB
-
-    User->>Browser: Enter credentials
-    Browser->>Cognito: Sign in request
-    Cognito->>Cognito: Validate credentials
-    Cognito->>Browser: Return JWT token
-    Browser->>Browser: Store token in localStorage
-    
-    User->>Browser: Click vote button
-    Browser->>APIGateway: POST /vote (with JWT in header)
-    APIGateway->>APIGateway: Validate JWT signature
-    APIGateway->>Lambda: Forward request (with user info)
-    Lambda->>DynamoDB: Store vote with user ID
-    DynamoDB->>Lambda: Confirm
-    Lambda->>Browser: Success response
-```
 
 ## Let's Get Building!
 
@@ -342,23 +306,6 @@ Our backend Lambda functions need a small change. Since we are now identifying u
 
 Here's how the Lambda function processes an authenticated request:
 
-```mermaid
-flowchart TD
-    A[Lambda Receives Event] --> B{Parse Request Body}
-    B --> C[Extract vote option]
-    C --> D[Get user ID from JWT claims]
-    D --> E{Valid vote option?}
-    E -->|No| F[Return 400 Error]
-    E -->|Yes| G[Create DynamoDB item]
-    G --> H[Store in database]
-    H --> I[Return 200 Success]
-    
-    style A fill:#e1f5ff
-    style D fill:#fff4e1
-    style H fill:#e1ffe1
-    style F fill:#ffe1e1
-    style I fill:#e1ffe1
-```
 
 ```python
 # In backend/vote.py
@@ -412,17 +359,6 @@ Let's break down what each Lambda function does in our application:
 ### Vote Lambda Function
 This function processes vote submissions from authenticated users.
 
-```mermaid
-flowchart LR
-    A[API Gateway] -->|POST /vote + JWT| B[Vote Lambda]
-    B -->|Extract user ID from JWT| C{Validate Vote}
-    C -->|Valid| D[Write to DynamoDB]
-    C -->|Invalid| E[Return Error]
-    D --> F[Return Success]
-    
-    style B fill:#ffe1f5
-    style D fill:#e1ffe1
-```
 
 **Key responsibilities:**
 - Extract the vote option from the request body
@@ -433,17 +369,6 @@ flowchart LR
 ### Results Lambda Function
 This function retrieves and counts all votes. No authentication required - results are public!
 
-```mermaid
-flowchart LR
-    A[API Gateway] -->|GET /results| B[Results Lambda]
-    B -->|Scan table| C[DynamoDB]
-    C -->|Return all votes| B
-    B -->|Count by option| D[Aggregate Results]
-    D --> E[Return JSON]
-    
-    style B fill:#ffe1f5
-    style C fill:#e1ffe1
-```
 
 **Key responsibilities:**
 - Scan the entire DynamoDB table to get all votes
@@ -454,18 +379,6 @@ flowchart LR
 ### Reset Lambda Function
 This function deletes all votes. Requires authentication to prevent abuse.
 
-```mermaid
-flowchart LR
-    A[API Gateway] -->|POST /reset + JWT| B[Reset Lambda]
-    B -->|Scan for all IDs| C[DynamoDB]
-    C -->|Return IDs| B
-    B -->|Batch delete| C
-    C --> D[Confirm deletion]
-    D --> E[Return Success]
-    
-    style B fill:#ffe1f5
-    style C fill:#e1ffe1
-```
 
 **Key responsibilities:**
 - Scan the table to get all item IDs
@@ -476,20 +389,6 @@ flowchart LR
 ### Email Filter Lambda Function
 This is a special type of Lambda called a **Cognito Trigger**. It runs automatically before a user signs up.
 
-```mermaid
-flowchart TD
-    A[User submits sign-up form] --> B[Cognito receives request]
-    B --> C[Email Filter Lambda]
-    C --> D{Email ends with @charlotte.edu?}
-    D -->|Yes| E[Allow sign-up]
-    D -->|No| F[Reject with error]
-    E --> G[Cognito creates user]
-    F --> H[User sees error message]
-    
-    style C fill:#ffe1f5
-    style E fill:#e1ffe1
-    style F fill:#ffe1e1
-```
 
 **Key responsibilities:**
 - Extract the email from the sign-up request
@@ -501,40 +400,6 @@ flowchart TD
 
 After implementing these changes, our complete authentication flow looks like this:
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant B as Browser
-    participant C as Cognito
-    participant EF as Email Filter Lambda
-    participant AG as API Gateway
-    participant VL as Vote Lambda
-    participant DB as DynamoDB
-
-    Note over U,DB: Sign-Up Flow
-    U->>B: Enter email & password
-    B->>C: Sign up request
-    C->>EF: Trigger pre-sign-up
-    EF->>EF: Check @charlotte.edu
-    EF->>C: Allow/Deny
-    C->>U: Send verification email
-    U->>B: Enter verification code
-    B->>C: Confirm sign-up
-    
-    Note over U,DB: Sign-In & Vote Flow
-    U->>B: Enter credentials
-    B->>C: Sign in request
-    C->>B: Return JWT token
-    B->>B: Store in localStorage
-    U->>B: Click vote button
-    B->>AG: POST /vote (JWT in header)
-    AG->>AG: Validate JWT
-    AG->>VL: Forward request
-    VL->>DB: Store vote with user ID
-    DB->>VL: Confirm
-    VL->>B: Success response
-    B->>U: Show "Thank you!"
-```
 
 We've now added a robust and secure authentication layer to our serverless application, moving it from a simple demo to a more production-ready state. This is the power of leveraging managed services like AWS Cognito!
 
