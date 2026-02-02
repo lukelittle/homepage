@@ -1,6 +1,6 @@
 ---
 title: "From Zero to Hero: Adding AWS Cognito Authentication to Your Serverless App"
-date: 2026-01-31T09:00:00-05:00
+date: 2026-01-22T09:00:00-05:00
 draft: false
 tags: ["AWS", "Cognito", "Serverless", "Lambda", "Authentication", "Security"]
 categories: ["engineering"]

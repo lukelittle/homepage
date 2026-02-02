@@ -1,6 +1,6 @@
 ---
 title: "Data Pour with Nimish Donde: Resiliency, Data Gravity, and Building Cloud Platforms That Scale"
-date: 2026-01-25T09:00:00-05:00
+date: 2026-01-16T09:00:00-05:00
 draft: false
 tags: ["data", "podcast", "cloud", "fintech", "resiliency", "AI", "banking", "charlotte"]
 categories: ["engineering"]

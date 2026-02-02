@@ -1,6 +1,6 @@
 ---
 title: "What October 20 Taught Me About DynamoDB (and What It Didn't)"
-date: 2026-01-29T09:00:00-05:00
+date: 2026-01-18T09:00:00-05:00
 draft: false
 tags: ["AWS", "DynamoDB", "resilience", "DNS", "Global Tables", "multi-region", "Terraform"]
 categories: ["engineering"]
