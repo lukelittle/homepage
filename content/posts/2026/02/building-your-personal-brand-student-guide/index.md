@@ -121,6 +121,26 @@ Once you click "Create Fork," GitHub will take about 30 seconds to copy everythi
 
 Forking is better than starting from scratch because you get a direct copy of the repository that you can modify however you want. All the GitHub Actions workflows come pre-configured, and you maintain a connection to the original repo in case you want updates later.
 
+### Choosing Your Version
+
+The student-branding-starter has two versions maintained in separate Git branches:
+
+- **`main` branch** (default): English-only
+- **`multilingual` branch**: English + Spanish bilingual support
+
+**To use the multilingual version**:
+
+1. **When forking**: Before clicking "Create Fork", use the branch dropdown to select `multilingual` instead of `main`
+2. **Switching an existing fork**: Clone your repository and run:
+   ```bash
+   git checkout multilingual
+   git push origin multilingual --set-upstream
+   ```
+
+Note: Deployment works identically via GitHub Actions regardless of which branch you choose.
+
+> **Personal note**: My blog is currently English-only, though I plan to eventually make it bilingual (English/Spanish). Since I learned computer science in English, writing technical content in Spanish is something I'm still developing.
+
 ### Step 2: Enable GitHub Pages (1 minute)
 
 Now we need to turn on the free hosting.
