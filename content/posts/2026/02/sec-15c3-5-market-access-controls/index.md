@@ -142,6 +142,49 @@ This gives us:
 3. **Audit trail**: The commands topic retains full history
 4. **Distributed config**: No need for external config store
 
+### State Compaction Process
+
+The following sequence diagram illustrates how Kafka's log compaction maintains the latest state per scope:
+
+```mermaid
+sequenceDiagram
+    participant K1 as Kafka<br/>killswitch.commands.v1<br/>(Full History)
+    participant KSA as Kill Switch<br/>Aggregator
+    participant K2 as Kafka<br/>killswitch.state.v1<br/>(Compacted)
+    participant KC as Kafka<br/>Compaction Process
+    participant OR as Order Router<br/>(New Instance)
+
+    Note over K1,OR: State Evolution Over Time
+    
+    Note over K1: t=100
+    K1->>KSA: KILL command<br/>ACCOUNT:12345
+    KSA->>K2: Publish state<br/>Key: ACCOUNT:12345<br/>Value: KILLED (t=100)
+    
+    Note over K1: t=200
+    K1->>KSA: UNKILL command<br/>ACCOUNT:12345
+    KSA->>K2: Publish state<br/>Key: ACCOUNT:12345<br/>Value: ACTIVE (t=200)
+    
+    Note over K1: t=300
+    K1->>KSA: KILL command<br/>ACCOUNT:12345
+    KSA->>K2: Publish state<br/>Key: ACCOUNT:12345<br/>Value: KILLED (t=300)
+    
+    Note over K2: Before Compaction:<br/>ACCOUNT:12345 KILLED (t=100)<br/>ACCOUNT:12345 ACTIVE (t=200)<br/>ACCOUNT:12345 KILLED (t=300)
+    
+    K2->>KC: Compaction triggered<br/>(based on segment.ms<br/>and dirty ratio)
+    
+    KC->>KC: Retain latest value<br/>per key
+    
+    Note over K2: After Compaction:<br/>ACCOUNT:12345 KILLED (t=300)<br/>(older values removed)
+    
+    Note over OR: New router starts up
+    OR->>K2: Read from beginning
+    K2-->>OR: ACCOUNT:12345 = KILLED (t=300)
+    
+    Note over OR: Router bootstrapped<br/>with current state<br/>(fast, no history to read)
+    
+    Note over K1: Commands topic still has<br/>full history for audit
+```
+
 ### Compaction Configuration
 
 ```
@@ -159,8 +202,6 @@ Our demo implements these patterns using serverless AWS services:
 
 **Key architectural decisions mapped to regulatory requirements:**
 
-**Key architectural decisions mapped to regulatory requirements:**
-
 | Requirement | Implementation |
 |-------------|----------------|
 | Direct and exclusive control | Operator Console API with manual override capability |
@@ -168,6 +209,45 @@ Our demo implements these patterns using serverless AWS services:
 | Prevent erroneous orders | Spark detects anomalous patterns in real-time |
 | Audit trail | Immutable Kafka log + DynamoDB index for queries |
 | Supervisory procedures | Documented thresholds, operator actions, correlation IDs |
+
+### Normal Order Flow
+
+The following sequence diagram illustrates how orders flow through the system when no kill switches are active:
+
+```mermaid
+sequenceDiagram
+    participant OG as Order Generator<br/>(Lambda)
+    participant K1 as Kafka<br/>orders.v1
+    participant S as Spark<br/>Risk Detector
+    participant K2 as Kafka<br/>risk_signals.v1
+    participant OR as Order Router<br/>(Lambda)
+    participant KS as Kafka<br/>killswitch.state.v1
+    participant K3 as Kafka<br/>orders.gated.v1
+    participant K4 as Kafka<br/>audit.v1
+    participant DDB as DynamoDB<br/>Audit Index
+
+    Note over OG,DDB: Normal Operation - No Kill Switches Active
+    
+    OG->>K1: Publish order<br/>(5 orders/sec)
+    Note right of K1: Key: account_id<br/>Partition by account
+    
+    K1->>S: Consume orders
+    S->>S: Compute 60s window<br/>order_count = 50<br/>notional = $500K
+    Note right of S: Below thresholds:<br/>order_rate < 100<br/>notional < $1M
+    S->>K2: Publish risk signal<br/>(metrics only, no alert)
+    
+    K1->>OR: Consume order
+    OR->>KS: Check kill state<br/>for ACCOUNT:12345
+    KS-->>OR: No kill state found<br/>(ACTIVE by default)
+    
+    Note over OR: Decision: ALLOW
+    
+    OR->>K3: Forward order<br/>to gated topic
+    OR->>K4: Publish audit event<br/>decision=ALLOW
+    OR->>DDB: Write audit record<br/>(async, best effort)
+    
+    Note over OG,DDB: Order successfully routed
+```
 
 ### Topic Flow
 
@@ -177,6 +257,54 @@ Our demo implements these patterns using serverless AWS services:
 4. **killswitch.state.v1**: Authoritative kill state (compacted)
 5. **orders.gated.v1**: Orders that passed kill switch check
 6. **audit.v1**: Immutable audit trail of all routing decisions
+
+### Order Router Enforcement
+
+The following diagram shows the detailed logic of how the order router enforces kill switches:
+
+```mermaid
+sequenceDiagram
+    participant K1 as Kafka<br/>orders.v1
+    participant OR as Order Router<br/>(Lambda)
+    participant Cache as In-Memory<br/>Kill State Cache
+    participant K2 as Kafka<br/>killswitch.state.v1
+    participant K3 as Kafka<br/>orders.gated.v1
+    participant K4 as Kafka<br/>audit.v1
+    participant DDB as DynamoDB<br/>Audit Index
+
+    Note over K1,DDB: Order Router Processing Logic
+    
+    K1->>OR: Consume order<br/>account_id: 12345<br/>symbol: AAPL
+    
+    OR->>Cache: Check kill state<br/>for scopes
+    
+    Note over Cache: Check hierarchy:<br/>1. GLOBAL<br/>2. ACCOUNT:12345<br/>3. SYMBOL:AAPL
+    
+    alt GLOBAL kill active
+        Cache-->>OR: GLOBAL = KILLED
+        Note over OR: Decision: DROP<br/>Reason: Global kill
+    else ACCOUNT kill active
+        Cache-->>OR: ACCOUNT:12345 = KILLED
+        Note over OR: Decision: DROP<br/>Reason: Account kill
+    else SYMBOL kill active
+        Cache-->>OR: SYMBOL:AAPL = KILLED
+        Note over OR: Decision: DROP<br/>Reason: Symbol kill
+    else No kills active
+        Cache-->>OR: All scopes ACTIVE
+        Note over OR: Decision: ALLOW
+        OR->>K3: Forward order
+    end
+    
+    OR->>K4: Publish audit event<br/>decision: ALLOW/DROP<br/>scope_matches: [...]<br/>corr_id: uuid-789
+    
+    OR->>DDB: Write audit record<br/>(async, best effort)
+    
+    Note over K2,OR: State updates arrive
+    K2->>OR: New state update
+    OR->>Cache: Update in-memory cache
+    
+    Note over Cache: Cache always reflects<br/>latest compacted state
+```
 
 ### Latency Considerations
 
@@ -188,6 +316,56 @@ In most retail and DMA (Direct Market Access) environments, the added millisecon
 
 Here's what happens when Spark detects a threshold breach:
 
+```mermaid
+sequenceDiagram
+    participant OG as Order Generator<br/>(Lambda)
+    participant K1 as Kafka<br/>orders.v1
+    participant S as Spark<br/>Risk Detector
+    participant K2 as Kafka<br/>risk_signals.v1
+    participant K3 as Kafka<br/>killswitch.commands.v1
+    participant KSA as Kill Switch<br/>Aggregator (Lambda)
+    participant K4 as Kafka<br/>killswitch.state.v1
+    participant DDB as DynamoDB<br/>State Cache
+    participant OR as Order Router<br/>(Lambda)
+    participant K5 as Kafka<br/>audit.v1
+
+    Note over OG,K5: Panic Mode Triggered
+    
+    OG->>K1: Publish orders<br/>(50 orders/sec)
+    Note right of K1: High rate for<br/>ACCOUNT:12345
+    
+    K1->>S: Consume orders
+    S->>S: Compute 60s window<br/>order_count = 150<br/>notional = $2.5M
+    
+    Note over S: BREACH DETECTED!<br/>order_count > 100
+    
+    S->>K2: Publish risk signal<br/>with breach flag
+    S->>K3: Publish KILL command<br/>scope: ACCOUNT:12345<br/>reason: "Order rate breach"<br/>corr_id: uuid-123
+    
+    Note over K3: Commands topic<br/>(full history retained)
+    
+    K3->>KSA: Consume KILL command
+    KSA->>KSA: Process command<br/>Create state record
+    
+    KSA->>K4: Publish state<br/>Key: ACCOUNT:12345<br/>Value: KILLED<br/>corr_id: uuid-123
+    Note right of K4: Compacted topic<br/>(latest state per key)
+    
+    KSA->>DDB: Update state cache<br/>(optional, for fast lookup)
+    
+    Note over K4,OR: State propagates to all routers
+    
+    K4->>OR: Router reads state update
+    OR->>OR: Update in-memory cache<br/>ACCOUNT:12345 = KILLED
+    
+    K1->>OR: New order from 12345
+    OR->>OR: Check kill state<br/>ACCOUNT:12345 = KILLED
+    
+    Note over OR: Decision: DROP
+    
+    OR->>K5: Publish audit event<br/>decision=DROP<br/>reason: "Kill switch active"<br/>corr_id: uuid-123
+    
+    Note over OG,K5: Order blocked - Kill switch active
+```
 
 **Key observations:**
 - Detection (Spark) is decoupled from enforcement (Router)
