@@ -145,6 +145,60 @@ For each scenario:
 
 **Rationale**: High-beta, leveraged accounts pose firm risk during market stress. Proactive restrictions prevent losses.
 
+### Beta-Weighted Stress Testing in Action
+
+This sequence diagram illustrates how beta-weighted stress testing is performed in the system:
+
+```mermaid
+sequenceDiagram
+    participant Spark as Spark Streaming
+    participant State as Position State
+    participant Calc as Risk Calculator
+    participant Stress as Stress Engine
+    participant Kafka as Kafka Topics
+
+    Note over Spark,Kafka: Beta-Weighted Stress Testing
+
+    Spark->>State: Get positions for ACC123
+    State-->>Spark: 500 NVDA @ $400
+
+    Spark->>Calc: Calculate base metrics
+    
+    Note over Calc: Market Value = 500 × $400 = $200k<br/>Beta = 1.8<br/>Beta-Weighted = $200k × 1.8 = $360k<br/>Equity = $220k<br/>Maintenance = $50k<br/>Excess = $170k
+
+    Calc-->>Spark: Base metrics computed
+
+    Spark->>Stress: Run SPY scenarios
+    
+    loop For each SPY scenario
+        Note over Stress: Scenario: SPY -8%
+        Stress->>Stress: ΔPnL = $360k × -0.08 = -$28.8k
+        Stress->>Stress: Equity stressed = $220k - $28.8k = $191.2k
+        Stress->>Stress: Excess stressed = $191.2k - $50k = $141.2k
+        Stress->>Stress: Underwater? NO ✅
+        
+        Stress->>Kafka: stress.beta_spy.v1<br/>{scenario: -0.08, underwater: false}
+    end
+
+    Note over Stress: Scenario: SPY -10%
+    Stress->>Stress: ΔPnL = $360k × -0.10 = -$36k
+    Stress->>Stress: Equity stressed = $184k
+    Stress->>Stress: Excess stressed = $134k
+    Stress->>Stress: Underwater? NO ✅
+    
+    Stress->>Kafka: stress.beta_spy.v1<br/>{scenario: -0.10, underwater: false}
+
+    Note over Stress: Scenario: SPY -15%
+    Stress->>Stress: ΔPnL = $360k × -0.15 = -$54k
+    Stress->>Stress: Equity stressed = $166k
+    Stress->>Stress: Excess stressed = $116k
+    Stress->>Stress: Underwater? NO ✅
+    
+    Stress->>Kafka: stress.beta_spy.v1<br/>{scenario: -0.15, underwater: false}
+
+    Note over Spark,Kafka: All 8 scenarios published
+```
+
 ## The Streaming Architecture
 
 ### Why Streaming?
@@ -236,6 +290,153 @@ The system escalates based on risk severity:
 | Deficiency persists > 30 min | LIQUIDATION | Firm liquidates positions |
 
 Each action is logged to the audit trail with correlation IDs for traceability.
+
+### Event Flow: Market Stress Scenario
+
+This sequence diagram shows what happens when the market declines and triggers the enforcement ladder, visualizing how the system reacts to changing prices and risk levels in real-time:
+
+```mermaid
+sequenceDiagram
+    participant Market as Market Data
+    participant API as API Gateway
+    participant Ingest as Lambda Ingest
+    participant Kafka as MSK Serverless
+    participant Spark as EMR Serverless<br/>(Spark Streaming)
+    participant Enforcement as Lambda Enforcement
+    participant DDB as DynamoDB
+    participant S3 as S3 Audit
+    participant Trader
+
+    Note over Market,Trader: T+0 14:00:00 - Market declines
+
+    Market->>API: POST /prices<br/>{symbol: NVDA, price: 340}
+    API->>Ingest: Invoke Lambda
+    Ingest->>Kafka: Publish to prices.v1
+    
+    Note over Spark: Price update triggers recalculation
+    
+    Kafka->>Spark: Read prices.v1
+    
+    Note over Spark: Recompute with new price:<br/>Position: 500 NVDA @ $340
+    
+    Spark->>Spark: Calculate:<br/>MV = $170k<br/>Beta-weighted = $306k<br/>Equity = $190k<br/>Maintenance = $42.5k<br/>Excess = $147.5k ✅
+    
+    Spark->>Kafka: Publish to margin.calc.v1
+    Spark->>Kafka: Publish to stress.beta_spy.v1
+    
+    Note over Spark: Stress test SPY -8%:<br/>ΔPnL = $306k × -0.08 = -$24.5k<br/>Equity stressed = $165.5k<br/>Excess stressed = $123k ✅
+    
+    Kafka->>Enforcement: Trigger Lambda
+    
+    Enforcement->>Enforcement: Evaluate stress results:<br/>All scenarios pass ✅
+    
+    Enforcement->>DDB: Update account state
+    Enforcement->>S3: Write audit log
+    
+    Note over Market,Trader: T+0 15:30:00 - Further decline
+    
+    Market->>API: POST /prices<br/>{symbol: NVDA, price: 300}
+    API->>Ingest: Invoke Lambda
+    Ingest->>Kafka: Publish to prices.v1
+    
+    Kafka->>Spark: Read prices.v1
+    
+    Spark->>Spark: Calculate:<br/>MV = $150k<br/>Equity = $170k<br/>Maintenance = $37.5k<br/>Excess = $132.5k ✅
+    
+    Note over Spark: Stress test SPY -8%:<br/>ΔPnL = -$21.6k<br/>Equity stressed = $148.4k<br/>Excess stressed = $110.9k ✅
+    
+    Spark->>Kafka: Publish results
+    
+    Kafka->>Enforcement: Trigger Lambda
+    
+    Enforcement->>Enforcement: Evaluate:<br/>Current: OK ✅<br/>Stress: OK ✅
+    
+    Enforcement->>DDB: Update state
+    Enforcement->>S3: Write audit log
+    
+    Note over Market,Trader: T+0 16:00:00 - Severe decline
+    
+    Market->>API: POST /prices<br/>{symbol: NVDA, price: 250}
+    API->>Ingest: Invoke Lambda
+    Ingest->>Kafka: Publish to prices.v1
+    
+    Kafka->>Spark: Read prices.v1
+    
+    Spark->>Spark: Calculate:<br/>MV = $125k<br/>Equity = $145k<br/>Maintenance = $31.25k<br/>Excess = $113.75k ✅
+    
+    Note over Spark: Stress test SPY -8%:<br/>ΔPnL = -$18k<br/>Equity stressed = $127k<br/>Excess stressed = $95.75k ✅<br/><br/>BUT: SPY -10%:<br/>Equity stressed = $122.5k<br/>Excess stressed = $91.25k ✅<br/><br/>SPY -12%:<br/>Equity stressed = $118k<br/>Excess stressed = $86.75k ⚠️
+    
+    Spark->>Kafka: Publish results
+    
+    Kafka->>Enforcement: Trigger Lambda
+    
+    Enforcement->>Enforcement: Evaluate:<br/>⚠️ WARNING: Low excess<br/>🚫 RESTRICTION: Underwater in severe scenarios
+    
+    Enforcement->>Kafka: Publish to restrictions.v1<br/>{account: ACC123, action: CLOSE_ONLY}
+    Enforcement->>DDB: Update state: RESTRICTED
+    Enforcement->>S3: Write audit log<br/>(correlation_id: uuid-5678)
+    
+    Enforcement-->>Trader: 🚫 Account restricted to close-only
+    
+    Note over Market,Trader: Account can only close positions
+```
+
+### Enforcement Escalation in Detail
+
+Here's a detailed visualization of how the system escalates from warning to liquidation according to the enforcement ladder:
+
+```mermaid
+sequenceDiagram
+    participant Spark as Spark Streaming
+    participant Kafka as Kafka Topics
+    participant Enforcement as Lambda Enforcement
+    participant DDB as DynamoDB
+    participant Trader
+
+    Note over Spark,Trader: Escalation Ladder
+
+    rect rgb(255, 255, 200)
+        Note over Spark,Trader: Stage 1: WARNING
+        Spark->>Kafka: margin.calc.v1<br/>{excess: $5k, excess_pct: 2%}
+        Kafka->>Enforcement: Trigger
+        Enforcement->>Enforcement: excess < 5% of MV<br/>⚠️ WARNING threshold
+        Enforcement->>Kafka: warnings.v1
+        Enforcement->>DDB: state: WARNING
+        Enforcement-->>Trader: ⚠️ Warning: Low margin
+    end
+
+    Note over Spark,Trader: Market continues to decline...
+
+    rect rgb(255, 220, 200)
+        Note over Spark,Trader: Stage 2: MARGIN CALL
+        Spark->>Kafka: margin.calc.v1<br/>{excess: -$10k}
+        Kafka->>Enforcement: Trigger
+        Enforcement->>Enforcement: excess < 0<br/>📞 MARGIN CALL
+        Enforcement->>Kafka: margin.calls.v1<br/>{deficiency: $10k}
+        Enforcement->>DDB: state: MARGIN_CALL<br/>call_issued_at: timestamp
+        Enforcement-->>Trader: 📞 Margin Call: Deposit $10k
+    end
+
+    Note over Spark,Trader: 30 minutes pass, no deposit...
+
+    rect rgb(255, 200, 200)
+        Note over Spark,Trader: Stage 3: RESTRICTION
+        Enforcement->>Enforcement: Check call age:<br/>issued 30 min ago<br/>still deficient<br/>🚫 RESTRICTION
+        Enforcement->>Kafka: restrictions.v1<br/>{action: CLOSE_ONLY}
+        Enforcement->>DDB: state: RESTRICTED
+        Enforcement-->>Trader: 🚫 Close-only mode
+    end
+
+    Note over Spark,Trader: Deficiency persists...
+
+    rect rgb(255, 180, 180)
+        Note over Spark,Trader: Stage 4: LIQUIDATION
+        Enforcement->>Enforcement: Deficiency > 60 min<br/>💥 LIQUIDATION
+        Enforcement->>Kafka: liquidations.v1<br/>{positions: [...]}
+        Enforcement->>DDB: state: LIQUIDATING
+        Enforcement-->>Trader: 💥 Forced liquidation
+    end
+```
 
 ## Implementation: Key Code Patterns
 
