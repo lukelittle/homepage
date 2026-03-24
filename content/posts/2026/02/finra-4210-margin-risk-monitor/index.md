@@ -2,7 +2,7 @@
 title: "Real-Time Margin and Stress Monitoring (FINRA Rule 4210)"
 slug: "finra-4210-margin-risk-monitor"
 date: 2026-02-16T09:00:00-05:00
-draft: false
+draft: true
 tags: ["kafka", "spark", "streaming", "risk-management", "regulatory-tech", "compliance", "aws", "finra", "sec", "broker-dealer"]
 categories: ["engineering"]
 description: "A deep dive into building streaming architectures for financial risk management based on FINRA Rule 4210 and TIMS methodology"
