@@ -15,7 +15,7 @@ hero:
     label: "The Data Pour · S4E5"
     title: "Nimish Donde: Resiliency and Data Gravity"
     photo: "the-data-pour-s4e5-nimish-donde.jpg"
-    focus: [0.0, 0.4]
+    focus: [1.0, 0.4]
 ---
 
 For this episode of Data Pour, I sat down with Nimish Donde—Head of Cloud Platform and Security Engineering at Truist—at Amélie's French bakery in Charlotte. It's a place that's been part of the city's fabric since 2008, growing from a single 24-hour location in NoDa (that I used to frequent during college) to four locations across Charlotte.
