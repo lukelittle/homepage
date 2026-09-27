@@ -24,7 +24,7 @@ This is the challenge that the **Consolidated Audit Trail (CAT)** solves for U.S
 
 ### The Regulatory Context
 
-In 2012, the Securities and Exchange Commission (SEC) adopted [Rule 613](https://www.sec.gov/about/divisions-offices/division-trading-markets/rule-613-consolidated-audit-trail) under Regulation NMS (National Market System). This rule requires self-regulatory organizations (SROs) to create and maintain a consolidated audit trail that captures the lifecycle of orders across U.S. securities markets.
+In July 2012, the Securities and Exchange Commission (SEC) adopted [Rule 613](https://www.sec.gov/about/divisions-offices/division-trading-markets/rule-613-consolidated-audit-trail) under Regulation NMS (National Market System) in Release No. 34-67457. The rule required the national securities exchanges and FINRA (the self-regulatory organizations, or SROs) to jointly file a national market system plan to create, implement, and maintain a consolidated audit trail that captures the lifecycle of orders across U.S. securities markets.
 
 **Legal citation**: [17 CFR § 242.613](https://www.law.cornell.edu/cfr/text/17/242.613)
 
@@ -44,26 +44,31 @@ This fragmentation made it difficult to:
 ### What CAT Captures
 
 CAT requires reporting of:
-1. **Customer and order information** for all NMS securities
+1. **Customer and order information** for all NMS securities (in today's implementation, customer and account data goes to a separate Customer and Account Information System, CAIS, and Social Security numbers are no longer reported to CAT)
+<!-- TODO(Luke): verify the CAIS/SSN wording against the current CAT NMS Plan and the SEC's 2020 exemptive relief before publishing -->
 2. **Order lifecycle events** from inception through execution
 3. **Routing information** across venues
 4. **Modifications, cancellations, and executions**
-5. **Timestamps** with millisecond (or better) precision
+5. **Timestamps** at least to the millisecond (finer if the firm's systems already capture finer)
 6. **Linkage identifiers** to connect related events
 
 ## The CAT NMS Plan
 
-The industry's implementation is operated by [CAT NMS, LLC](https://www.catnmsplan.com/), which:
-- Receives billions of events daily from market participants
-- Maintains [technical specifications](https://www.catnmsplan.com/specifications) for data reporting
-- Provides regulatory access to consolidated data
-- Enforces data quality standards
+The roles here are easy to blur, so let me be precise. CAT exists under a national market system plan, the [CAT NMS Plan](https://www.catnmsplan.com/), which is jointly owned by the SROs (the exchanges and FINRA, called the Participants) through CAT NMS, LLC. The Participants hired **FINRA CAT, LLC** as the Plan Processor, which builds and runs the central repository. The **SEC** approved the Plan and has oversight of it.
 
-[FINRA](https://www.finra.org/rules-guidance/notices/20-31) provides oversight and expects firms to perform comparative reviews and maintain data quality controls.
+In practice, the Plan Processor:
+- Receives billions of events daily from market participants
+- Publishes [technical specifications](https://www.catnmsplan.com/specifications) for data reporting
+- Provides regulators access to the consolidated data
+- Runs data quality feedback and error correction
+
+Broker-dealers ("Industry Members") report to CAT under each SRO's CAT compliance rule, and FINRA examines its member firms for it. FINRA has [told firms](https://www.finra.org/rules-guidance/notices/20-31) it expects them to perform comparative reviews and maintain data quality controls.
+<!-- TODO(Luke): verify Regulatory Notice 20-31 is the right cite for the "comparative reviews" expectation (finra.org blocked automated fetch) -->
 
 ### Recent Developments
 
-The CAT program continues to evolve. In 2025, the SEC issued an [order to reduce operating costs](https://www.sec.gov/newsroom/press-releases/2025-127-sec-issues-order-reduce-operating-costs-consolidated-audit-trail) while maintaining regulatory effectiveness ([fact sheet](https://www.sec.gov/files/34-104144-fact-sheet.pdf)).
+The CAT program continues to evolve. <!-- TODO(Luke): verify the 2025 order details, press release number (2025-127) and release number 34-104144 (sec.gov rate-limited automated fetch) -->
+In 2025, the SEC issued an [order to reduce operating costs](https://www.sec.gov/newsroom/press-releases/2025-127-sec-issues-order-reduce-operating-costs-consolidated-audit-trail) while maintaining regulatory effectiveness ([fact sheet](https://www.sec.gov/files/34-104144-fact-sheet.pdf)).
 
 ## Understanding Order Lifecycles
 
@@ -203,9 +208,12 @@ graph LR
     C --> D[Linkage<br/>Graph]
     C --> E[Lifecycle<br/>Snapshots]
     C --> F[Exceptions]
-    E --> G[S3/Iceberg]
-    E --> H[DynamoDB]
+    E -.-> G[S3/Iceberg]
+    E -.-> H[DynamoDB]
 ```
+
+The solid paths are what the Spark job does today: it reads `cat.events.v1` and writes linkages, lifecycle snapshots, and exceptions back to Kafka. The dotted sinks are where the design is headed. Terraform creates the S3 bucket and a DynamoDB table for snapshots, but the job doesn't write to them yet.
+<!-- TODO(Luke): repo has S3/Iceberg + DynamoDB in the README diagram and Terraform, but lifecycle_streaming.py never writes to them (and nothing writes audit.v1); wire them up in repo or keep this caveat -->
 
 ### Kafka Topics
 
@@ -215,37 +223,55 @@ We use separate topics for different concerns:
 - **cat.linkages.v1**: Parent-child edges
 - **cat.lifecycle.v1**: Materialized lifecycle snapshots
 - **cat.exceptions.v1**: Data quality violations
-- **audit.v1**: Immutable audit trail of corrections
+- **audit.v1**: Immutable audit trail of corrections (created by `tools/create_topics.sh`, not written by the Spark job yet)
 
 ### Spark Structured Streaming
 
-The core processing logic:
+The core processing logic, trimmed down from `spark/lifecycle_job/lifecycle_streaming.py`:
 
 ```python
-# Read events from Kafka
+# Read events from Kafka and parse the JSON payload
 events = spark.readStream \
     .format("kafka") \
+    .option("kafka.bootstrap.servers", bootstrap_servers) \
     .option("subscribe", "cat.events.v1") \
-    .load()
+    .load() \
+    .select(from_json(col("value").cast("string"), EVENT_SCHEMA).alias("data")) \
+    .select("data.*") \
+    .withColumn("event_time", (col("ts_event") / 1000).cast("timestamp"))
 
-# Deduplicate (idempotency)
-unique_events = events.dropDuplicates(["event_id"])
+# Watermark first, then deduplicate (idempotency) with bounded state
+watermarked = events.withWatermark("event_time", "30 seconds")
+unique_events = watermarked.dropDuplicatesWithinWatermark(["event_id"])
 
-# Apply watermark for late data
-watermarked = unique_events \
-    .withWatermark("event_time", "30 seconds")
+# Build linkages: a UDF returns an array of edges per event, then explode
+linkages = unique_events \
+    .withColumn("edges", construct_edges(
+        col("event_type"), col("customer_order_id"), col("firm_order_id"),
+        col("parent_firm_order_id"), col("route_id"), col("exec_id"),
+        col("ts_event"))) \
+    .select(explode(col("edges")).alias("edge")) \
+    .select("edge.*")
 
-# Build linkages
-linkages = watermarked.flatMap(construct_edges)
-
-# Materialize lifecycles
-lifecycles = watermarked \
+# Materialize lifecycles: one row per customer order
+lifecycles = unique_events \
     .groupBy("customer_order_id") \
-    .agg(materialize_lifecycle)
+    .agg(
+        _max(col("qty")).alias("total_qty"),
+        _sum(expr("CASE WHEN event_type = 'FILL' THEN qty ELSE 0 END")).alias("filled_qty"),
+        count(expr("CASE WHEN event_type = 'ROUTE' THEN 1 END")).alias("route_count"),
+        # ...status, avg exec price, first/last timestamps
+    )
 
-# Validate data quality
-exceptions = lifecycles.flatMap(validate_lifecycle)
+# Validate data quality (filters on the lifecycle rows)
+exceptions = validate_lifecycles(lifecycles)
 ```
+
+Why the watermark comes before deduplication: a plain `dropDuplicates(["event_id"])` on a stream has to remember every `event_id` it has ever seen, forever, so its state grows without bound. `dropDuplicatesWithinWatermark` (Spark 3.5+) only remembers each ID until the watermark passes it, which is fine as long as retries show up within the watermark delay. On older Spark, the equivalent is `withWatermark(...)` followed by `dropDuplicates(["event_id", "event_time"])`. Including the event-time column is what lets Spark evict old keys, but it only catches duplicates that carry the same timestamp.
+<!-- TODO(Luke): repo has the same issue; fix in repo. deduplicate_events() does withWatermark("event_time", "1 hour").dropDuplicates(["event_id"]) with no event-time column in the keys, so dedup state is never evicted; apply_watermark() then calls withWatermark a second time. -->
+
+One more thing to know about that `groupBy("customer_order_id")`: because the grouping key has no event-time column, Spark can't use the watermark to expire lifecycle state either, and it can't run that aggregation in `append` mode. The repo writes lifecycles in `update` mode, which works, but a production version would need to finalize and evict lifecycles (for example with `applyInPandasWithState` and a timeout).
+<!-- TODO(Luke): repo writes `exceptions` (derived from the streaming aggregation) to Kafka in append mode, which Spark rejects for an aggregation without an event-time key; switch that query to update mode or restructure -->
 
 ## Handling Late and Out-of-Order Events
 
@@ -269,26 +295,36 @@ Watermark: 10:04:30
 Events with event_time < 10:04:30 are "late"
 ```
 
+(Strictly, Spark computes the watermark from the maximum event time it has seen, not the wall clock, but the idea is the same.)
+
 ### Reconciliation
 
-When a late event arrives:
-1. **Detect**: Event timestamp is before watermark
-2. **Retrieve**: Get existing lifecycle state
-3. **Recompute**: Replay all events including late one
-4. **Audit**: Log the correction
-5. **Update**: Emit corrected lifecycle snapshot
+Here's the catch: once an event is behind the watermark, Spark's stateful operators (deduplication, windowed aggregations) drop it. The streaming job won't reconcile it for you. Late events past the watermark need their own path.
 
-This ensures correctness even with late-arriving data.
+The approach I'd take:
+1. **Detect**: Before the stateful operators, tag events whose event time is older than processing time minus the watermark delay. That's an approximation of Spark's watermark, and it's what the repo's `is_late` column does.
+2. **Route**: Write those events to a separate late-events sink (a `cat.late_events.v1` topic or an S3 prefix) instead of relying on the streaming aggregation.
+3. **Recompute**: A batch reconciliation job replays the full event log for each affected `customer_order_id`, including the late events. The raw topic keeps 30 days of events, so the history is there.
+4. **Audit**: Log the correction to `audit.v1`.
+5. **Update**: Emit a corrected lifecycle snapshot.
+
+The streaming path gives you fast, provisional lifecycles, and the batch path makes them correct. Real CAT reporting has a similar rhythm: data is due by 8:00 a.m. ET on the trading day after the event, and errors get corrected afterward.
+<!-- TODO(Luke): repo only tags is_late / is_provisional; the late-events topic and batch reconciliation job aren't implemented yet -->
+<!-- TODO(Luke): verify error-correction deadline (T+3 by 8:00 a.m. ET) in the current CAT NMS Plan / Industry Member specs if you want to add it here -->
 
 ## Data Quality Validation
 
 ### Validation Rules
 
-Our system checks for:
+The repo checks two quantity rules on each lifecycle today:
+
+- **Overfill**: Filled more than ordered (`OVERFILL`)
+- **Negative fill**: Filled quantity below zero (`NEGATIVE_FILL`)
+
+The checks I'd add next (and good exercises if you're working through the repo):
 
 - **Sequence violations**: Execution before order receipt
 - **Missing linkages**: Fill references unknown route
-- **Quantity violations**: Filled more than ordered
 - **Temporal anomalies**: Events with impossible timestamps
 - **Orphaned events**: Events with no parent
 
@@ -298,15 +334,18 @@ When violations are detected:
 
 ```json
 {
-  "exception_type": "FILL_BEFORE_NEW",
+  "exception_id": "b3f1c2de-...",
+  "exception_type": "OVERFILL",
   "severity": "ERROR",
   "customer_order_id": "COID-123",
-  "description": "Execution timestamp precedes order timestamp",
-  "ts_detected": 1710000030000
+  "firm_order_id": "FOID-456",
+  "description": "Filled quantity exceeds total quantity",
+  "ts_detected": 1710000030000,
+  "metadata": {"total_qty": 100, "filled_qty": 120}
 }
 ```
 
-Exceptions are written to a dedicated topic for investigation.
+Exceptions are written to `cat.exceptions.v1` for investigation.
 
 ## Try It Yourself
 
@@ -326,7 +365,8 @@ docker-compose up -d
 
 # Run Spark job
 cd ../spark/lifecycle_job
-spark-submit lifecycle_streaming.py
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  lifecycle_streaming.py
 
 # Generate events
 cd ../../services/event_generator
@@ -356,50 +396,64 @@ See the [full documentation](https://github.com/lukelittle/sec-613-cat-lifecycle
 1. **CAT solves a real problem**: Reconstructing order lifecycles across fragmented markets
 2. **Event sourcing is natural**: Store events, derive state
 3. **Linkages enable reconstruction**: Identifiers connect distributed events
-4. **Late data is normal**: Watermarks and reconciliation handle it
+4. **Late data is normal**: Watermarks bound your state, and events past the watermark need a separate reconciliation path
 5. **Data quality matters**: Validation catches errors early
-6. **Streaming is powerful**: Real-time processing with exactly-once semantics
-
-## Educational Disclaimer
-
-This project is **for educational purposes only**:
-- Simplified version of real CAT concepts
-- Synthetic data only
-- Not production CAT reporting
-- Not legal or compliance advice
-
-Real CAT reporting requires:
-- Registration with CAT NMS, LLC
-- Adherence to complete technical specifications
-- Proper security and data protection
-- Qualified compliance personnel
-
-## Sources and Further Reading
-
-### Regulatory Sources
-- [SEC Rule 613 Overview](https://www.sec.gov/about/divisions-offices/division-trading-markets/rule-613-consolidated-audit-trail)
-- [17 CFR § 242.613 - Legal Text](https://www.law.cornell.edu/cfr/text/17/242.613)
-- [CAT NMS Plan Website](https://www.catnmsplan.com/)
-- [CAT Technical Specifications](https://www.catnmsplan.com/specifications)
-- [FINRA Regulatory Notice 20-31](https://www.finra.org/rules-guidance/notices/20-31)
-- [FINRA CAT Oversight](https://www.finra.org/rules-guidance/guidance/reports/2026-finra-annual-regulatory-oversight-report/cat)
-- [SEC 2025 Cost Reduction Order](https://www.sec.gov/newsroom/press-releases/2025-127-sec-issues-order-reduce-operating-costs-consolidated-audit-trail)
-- [Cost Control Fact Sheet](https://www.sec.gov/files/34-104144-fact-sheet.pdf)
-
-### Technical Resources
-- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
-- [Spark Structured Streaming Guide](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
-- [Event Sourcing Pattern](https://martinfowler.com/eaaDev/EventSourcing.html)
-
-### Project Repository
-- [GitHub Repository](https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example)
-- [Workshop Documentation](https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example/tree/main/docs)
+6. **Streaming is powerful**: Real-time processing, as long as you design for duplicates (the Kafka sink is at-least-once, so downstream consumers should be idempotent too)
 
 ## About This Project
 
 Created for finance-minded college students to learn AWS with real-world examples. The goal is to teach practical cloud and streaming concepts through regulatory-inspired use cases that bridge technology and financial services.
 
----
-
 **Ready to build your own lifecycle reconstruction system?** Check out the [full repository](https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example) and workshop materials!
 
+## Sources and Further Reading
+
+### Primary Regulatory Sources
+
+1. **SEC Rule 613 Final Adopting Release**  
+   Securities and Exchange Commission, Release No. 34-67457 (July 18, 2012)  
+   [https://www.sec.gov/files/rules/final/2012/34-67457.pdf](https://www.sec.gov/files/rules/final/2012/34-67457.pdf)
+
+2. **Code of Federal Regulations: 17 CFR § 242.613**  
+   [https://www.law.cornell.edu/cfr/text/17/242.613](https://www.law.cornell.edu/cfr/text/17/242.613)
+
+3. **SEC Rule 613 Overview**  
+   [https://www.sec.gov/about/divisions-offices/division-trading-markets/rule-613-consolidated-audit-trail](https://www.sec.gov/about/divisions-offices/division-trading-markets/rule-613-consolidated-audit-trail)
+
+4. **CAT NMS Plan**  
+   [https://www.catnmsplan.com/](https://www.catnmsplan.com/)
+
+5. **CAT Technical Specifications**  
+   [https://www.catnmsplan.com/specifications](https://www.catnmsplan.com/specifications)
+
+### Oversight and Recent Developments
+
+6. **FINRA Regulatory Notice 20-31**  
+   [https://www.finra.org/rules-guidance/notices/20-31](https://www.finra.org/rules-guidance/notices/20-31)
+
+7. **FINRA 2026 Annual Regulatory Oversight Report: CAT**  
+   [https://www.finra.org/rules-guidance/guidance/reports/2026-finra-annual-regulatory-oversight-report/cat](https://www.finra.org/rules-guidance/guidance/reports/2026-finra-annual-regulatory-oversight-report/cat)
+
+8. **SEC Order to Reduce CAT Operating Costs (2025)**  
+   [https://www.sec.gov/newsroom/press-releases/2025-127-sec-issues-order-reduce-operating-costs-consolidated-audit-trail](https://www.sec.gov/newsroom/press-releases/2025-127-sec-issues-order-reduce-operating-costs-consolidated-audit-trail)  
+   Fact sheet: [https://www.sec.gov/files/34-104144-fact-sheet.pdf](https://www.sec.gov/files/34-104144-fact-sheet.pdf)
+
+### Technical Resources
+
+9. **Apache Kafka Documentation**  
+   [https://kafka.apache.org/documentation/](https://kafka.apache.org/documentation/)
+
+10. **Apache Spark Structured Streaming Guide**  
+    [https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
+
+11. **Martin Fowler: Event Sourcing**  
+    [https://martinfowler.com/eaaDev/EventSourcing.html](https://martinfowler.com/eaaDev/EventSourcing.html)
+
+### Project Repository
+
+12. **GitHub Repository and Workshop Docs**  
+    [https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example](https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example)
+
+---
+
+**Disclaimer**: This blog post and associated demo are for educational purposes only. They do not constitute trading advice, legal advice, or compliance guidance. The architecture described does not represent any former employer's actual systems or implementations. The demo uses synthetic data and simplified logic to illustrate concepts rather than real production implementations. It is not CAT reporting: actual CAT reporting requires onboarding with the Plan Processor, adherence to the full CAT technical specifications, and extensive testing, security, and compliance review. Always consult with legal and compliance professionals when implementing regulatory reporting systems.
