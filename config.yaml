@@ -36,6 +36,10 @@ params:
     - name: "rss"
       url: "/index.xml"
 
+  # Browser/device icons (Safari's pinned-tab icon reuses the 32px favicon)
+  assets:
+    safari_pinned_tab: "/favicon-32x32.png"
+
   # Single-author site: no byline on every card
   hideAuthor: true
 
