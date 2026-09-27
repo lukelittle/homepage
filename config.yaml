@@ -30,9 +30,8 @@ params:
       url: "https://bsky.app/profile/lukelittle.com"
     - name: "github"
       url: "https://github.com/lukelittle"
-    # TODO: add your LinkedIn URL and uncomment
-    # - name: "linkedin"
-    #   url: "https://www.linkedin.com/in/<handle>/"
+    - name: "linkedin"
+      url: "https://www.linkedin.com/in/lucaslittle/"
     - name: "rss"
       url: "/index.xml"
 

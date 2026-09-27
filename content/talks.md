@@ -5,7 +5,7 @@ ShowPostNavLinks: false
 ShowReadingTime: false
 ---
 
-I like talking about cloud careers, AWS architecture, and building with AI, especially with students and early-career engineers. If you'd like me to speak at your school, meetup, or team, see the [About](/about/) page.
+I like talking about cloud careers, AWS architecture, and building with AI, especially with students and early-career engineers. If you'd like me to speak at your school, meetup, or team, [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
 
 ## Talks
 
@@ -26,7 +26,7 @@ A 30-60-90 day plan for students to get hands-on cloud experience before their f
 
 ## Podcast: The Data Pour (Season 4 host)
 
-Real conversations about cloud, data, and AI with the people who build it.
+I hosted Season 4 of Ippon's The Data Pour: real conversations about cloud, data, and AI with the people who build it.
 
 | Episode | Guest | |
 |---|---|---|
