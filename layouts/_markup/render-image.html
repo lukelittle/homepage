@@ -1,0 +1,20 @@
+{{- /* Serve page-bundle images resized (WebP, up to 1500px wide, with a 750px
+       variant for phones) instead of the full-size original. Images that aren't
+       page resources (e.g. /images/... from static/) render as-is. */ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $img := "" -}}
+{{- if not $u.IsAbs -}}{{- $img = .Page.Resources.Get $u.Path -}}{{- end -}}
+{{- if and $img (in (slice "image/png" "image/jpeg" "image/webp") $img.MediaType.Type) -}}
+  {{- $large := $img.Process "webp q85" -}}
+  {{- if gt $img.Width 1500 }}{{ $large = $img.Resize "1500x webp q85" }}{{ end -}}
+  {{- $srcset := printf "%s %dw" $large.RelPermalink $large.Width -}}
+  {{- if gt $large.Width 750 -}}
+    {{- $small := $img.Resize "750x webp q85" -}}
+    {{- $srcset = printf "%s %dw, %s" $small.RelPermalink $small.Width $srcset -}}
+  {{- end -}}
+  <img src="{{ $large.RelPermalink }}" srcset="{{ $srcset }}" sizes="(max-width: 800px) 100vw, 750px"
+       width="{{ $large.Width }}" height="{{ $large.Height }}" alt="{{ .Text }}"
+       {{- with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- else -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- end -}}
