@@ -616,3 +616,9 @@ hr {
 .clear {
     clear: both;
 }
+
+/* In-post images carry width/height attributes (to reserve space while
+   loading); height:auto keeps the aspect ratio when max-width shrinks them */
+.post-content img {
+    height: auto;
+}
