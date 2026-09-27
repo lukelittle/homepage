@@ -9,14 +9,20 @@ pagination:
 
 params:
   env: production
-  description: "I build fun things."
+  description: "I build cloud and AI systems for banking and capital markets, and help engineers and students level up."
   author: "Luke Little"
   
-  # Enable dark mode by default
-  defaultTheme: "dark"
-  
-  # Disable theme toggle (always dark)
-  disableThemeToggle: true
+  # Follow the visitor's OS preference; toggle in the header to override
+  defaultTheme: "auto"
+  disableThemeToggle: false
+
+  # Intro block at the top of the homepage
+  homeInfoParams:
+    Title: "Hi, I'm Luke 👋"
+    Content: >
+      I build cloud and AI systems for banking and capital markets, and help engineers and students level up.
+      I write about **[regulated systems on AWS](/series/regulated-markets-on-aws/)**, **[applied AI and agents](/tags/ai/)**,
+      **[teaching the next generation of builders](/tags/education/)**, and the **[talks and podcasts](/talks/)** I get to be part of.
   
   # Social icons
   socialIcons:
@@ -24,10 +30,15 @@ params:
       url: "https://bsky.app/profile/lukelittle.com"
     - name: "github"
       url: "https://github.com/lukelittle"
+    # TODO: add your LinkedIn URL and uncomment
+    # - name: "linkedin"
+    #   url: "https://www.linkedin.com/in/<handle>/"
+    - name: "rss"
+      url: "/index.xml"
 
   # Show post metadata
   ShowReadingTime: true
-  ShowPostNavLinks: false
+  ShowPostNavLinks: true
   ShowBreadCrumbs: false
   ShowCodeCopyButtons: true
   ShowShareButtons: false
@@ -42,6 +53,7 @@ outputs:
 taxonomies:
   tag: tags
   category: categories
+  series: series
 
 # Permalinks - date-based URLs with posts prefix for year/month archives
 permalinks:
@@ -61,9 +73,18 @@ menu:
     - name: Posts
       url: /posts/
       weight: 10
+    - name: Series
+      url: /series/
+      weight: 20
+    - name: Talks
+      url: /talks/
+      weight: 30
+    - name: Projects
+      url: /projects/
+      weight: 40
+    - name: Now
+      url: /now/
+      weight: 50
     - name: About
       url: /about/
-      weight: 20
-    - name: Tags
-      url: /tags/
-      weight: 30
+      weight: 60

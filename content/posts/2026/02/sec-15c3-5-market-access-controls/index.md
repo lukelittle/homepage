@@ -5,6 +5,7 @@ date: 2026-02-14T09:00:00-05:00
 draft: false
 tags: ["kafka", "spark", "streaming", "risk-management", "regulatory-tech", "compliance", "aws", "finra", "sec", "broker-dealer"]
 categories: ["engineering"]
+series: ["Regulated Markets on AWS"]
 description: "How to implement real-time trading risk controls using Apache Kafka and Spark to meet SEC Rule 15c3-5 requirements, with lessons from the Knight Capital incident"
 aliases:
   - /posts/2026/02/streaming-risk-controls-kafka-spark/

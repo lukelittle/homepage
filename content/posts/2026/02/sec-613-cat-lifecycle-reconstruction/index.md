@@ -1,10 +1,11 @@
 ---
-title: "Event-Sourced Order Lifecycle Reconstruction (SEC Rule 613 / CAT)"
+title: "Event-Sourced Order Lifecycle Reconstruction (SEC Rule 613 and CAT)"
 slug: "sec-613-cat-lifecycle-reconstruction"
 date: 2026-02-19T09:00:00-05:00
 draft: true
 tags: ["streaming", "event-sourcing", "kafka", "spark", "regulatory-tech", "distributed-systems", "aws", "finra", "sec", "broker-dealer", "compliance"]
 categories: ["engineering"]
+series: ["Regulated Markets on AWS"]
 description: "Learn how to reconstruct complete order lifecycles across distributed trading systems using event sourcing, Apache Kafka, and Spark Structured Streaming - inspired by SEC Rule 613 and the Consolidated Audit Trail."
 aliases:
   - /posts/2026/02/consolidated-audit-trail-event-sourcing/
@@ -70,7 +71,7 @@ The CAT program continues to evolve. In 2025, the SEC issued an [order to reduce
 
 An order lifecycle is the complete journey of an order from inception to final disposition:
 
-```
+```mermaid
 sequenceDiagram
     participant Customer
     participant Broker
@@ -158,7 +159,7 @@ You can reconstruct the complete story and derive current state at any point in 
 
 Events contain IDs that connect them into a lifecycle graph:
 
-```
+```mermaid
 graph TD
     COID[Customer Order ID<br/>COID-123] --> FOID1[Firm Order ID<br/>FOID-456<br/>NEW 100 shares]
     
@@ -195,7 +196,7 @@ By following these links, we reconstruct the complete lifecycle graph - even whe
 
 Our simplified CAT implementation uses:
 
-```
+```mermaid
 graph LR
     A[Event<br/>Generator] --> B[Kafka Topics]
     B --> C[Spark<br/>Streaming]
@@ -402,4 +403,3 @@ Created for finance-minded college students to learn AWS with real-world example
 
 **Ready to build your own lifecycle reconstruction system?** Check out the [full repository](https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example) and workshop materials!
 
-*Content was rephrased for compliance with licensing restrictions. All regulatory sources are cited and linked.*

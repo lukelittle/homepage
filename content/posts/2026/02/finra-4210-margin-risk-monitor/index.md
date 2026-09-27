@@ -5,6 +5,7 @@ date: 2026-02-16T09:00:00-05:00
 draft: true
 tags: ["kafka", "spark", "streaming", "risk-management", "regulatory-tech", "compliance", "aws", "finra", "sec", "broker-dealer"]
 categories: ["engineering"]
+series: ["Regulated Markets on AWS"]
 description: "A deep dive into building streaming architectures for financial risk management based on FINRA Rule 4210 and TIMS methodology"
 aliases:
   - /posts/2026/02/real-time-margin-risk-finra-4210/
@@ -17,7 +18,7 @@ cover:
 
 Margin risk management is critical to brokerages, where volatility events can pose existential risks when clients hold concentrated positions with leverage. Imagine a scenario where a stock held through margin, having a high beta coefficient (making it especially reactive to market movements), is held by enough clients to cause catastrophic losses during a flash crash. It only takes minutes for the damage to be done.
 
-As fiduciaries, brokers must ensure the firm can weather all sorts of market events so that clients' funds remain safe. This necessitates constant vigilance and examination of risk positions. Traditionally, these calculations were done through batch processes running hourly, every 15 minutes, or if you were really advanced, every minute. But modern technology has made it possible—through tools like Kafka and Spark Streaming—to make these calculations in real-time, as the market moves.
+As firms extending credit, brokers must ensure the firm can weather all sorts of market events so that clients' funds remain safe. This necessitates constant vigilance and examination of risk positions. Traditionally, these calculations were done through batch processes running hourly, every 15 minutes, or if you were really advanced, every minute. But modern technology has made it possible—through tools like Kafka and Spark Streaming—to make these calculations in real-time, as the market moves.
 
 This article explores how to build a real-time margin risk monitoring system using event-driven architecture, inspired by FINRA Rule 4210 (margin requirements), TIMS (Theoretical Intermarket Margining System), and industry-standard beta-weighted stress testing. You'll see not just the technical implementation, but also the reasoning behind these architectural decisions.
 
@@ -621,7 +622,7 @@ For a real-world margin monitoring system, the analysis might look like this:
 
 - **Downside**: $0.39/hour idle cost = $280/month if running 24/7
 - **Upside**: Sub-minute latency, meets regulatory expectations, could prevent significant losses during market events
-- **Alternative**: Flink on KDA ($158/month) for true streaming could be considered, though it might require different expertise
+- **Alternative**: Amazon Managed Service for Apache Flink ($158/month) for true streaming could be considered, though it might require different expertise
 
 This represents one of those pragmatic architectural decisions that production systems face: sometimes it makes sense to **pay for idle capacity to ensure low latency**. When put in perspective—operational costs like this are typically minuscule compared to what a single missed margin event could cost—the decision becomes more straightforward.
 

@@ -1,0 +1,19 @@
+{{- /* Lists the other posts in this post's series (front matter: series: ["Name"]) */ -}}
+{{- with .GetTerms "series" }}
+{{- range . }}
+{{- $pages := .Pages.ByDate }}
+{{- if gt (len $pages) 1 }}
+<aside class="series-box">
+  <p class="series-box-title">Part of the series <a href="{{ .Permalink }}">{{ .LinkTitle }}</a></p>
+  <ol>
+    {{- range $pages }}
+    <li>
+      {{- if eq .Permalink $.Permalink }}<strong>{{ .Title }}</strong>
+      {{- else }}<a href="{{ .Permalink }}">{{ .Title }}</a>{{ end }}
+    </li>
+    {{- end }}
+  </ol>
+</aside>
+{{- end }}
+{{- end }}
+{{- end }}

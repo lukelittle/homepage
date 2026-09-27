@@ -5,6 +5,7 @@ date: 2026-02-20T09:00:00-05:00
 draft: true
 tags: ["batch-processing", "aws", "serverless", "regulatory-tech", "sec", "finra", "compliance", "data-engineering", "reporting", "broker-dealer"]
 categories: ["engineering"]
+series: ["Regulated Markets on AWS"]
 description: "How to design deterministic batch processing systems for regulatory compliance reporting, with a focus on SEC Rule 606(a) order routing disclosure requirements"
 cover:
     image: "sec-606a-order-routing-disclosure.png"

@@ -1,10 +1,37 @@
 /* Modern Dark Theme for Luke Little's Blog
- * Color palette: Deep slate background with purple/teal accents
+ * Light and dark palettes (dark: deep slate with purple/teal accents)
  * Inspired by VS Code Dark+ and modern engineering blogs
  */
 
 :root {
-    /* Override PaperMod's default dark theme variables */
+    /* Light palette (overrides PaperMod's defaults) */
+    --theme: #ffffff;           /* Page background */
+    --entry: #f8fafc;           /* Card/entry background */
+    --primary: #0f172a;         /* Primary text */
+    --secondary: #475569;       /* Secondary text */
+    --tertiary: #cbd5e1;        /* Tertiary */
+    --content: #1e293b;         /* Content text */
+    --code-bg: #f1f5f9;         /* Inline code background */
+    --code-block-bg: #0f172a;   /* Code blocks stay dark to match monokai */
+    --border: #e2e8f0;          /* Borders */
+
+    --accent-purple: #6d28d9;
+    --accent-teal: #0f766e;
+    --accent-teal-hover: #115e59;
+    --accent-purple-hover: #7c3aed;
+
+    /* Typography */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-code: 'Fira Code', 'Monaco', 'Courier New', monospace;
+
+    /* Layout */
+    --main-width: 750px;
+    --gap: 24px;
+    --content-gap: 20px;
+}
+
+:root[data-theme="dark"] {
+    /* Dark palette: deep slate background with purple/teal accents */
     --theme: #0f172a;           /* Deep slate background */
     --entry: #1e293b;           /* Card/entry background */
     --primary: #e2e8f0;         /* Primary text - soft light gray */
@@ -14,24 +41,14 @@
     --code-bg: #1e293b;         /* Inline code background */
     --code-block-bg: #0f172a;   /* Code block background */
     --border: #334155;          /* Borders */
-    
-    /* Custom accent colors */
+
     --accent-purple: #a78bfa;   /* Headings and emphasis */
     --accent-teal: #2dd4bf;     /* Links */
     --accent-teal-hover: #5eead4;
     --accent-purple-hover: #c084fc;
-    
-    /* Typography */
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --font-code: 'Fira Code', 'Monaco', 'Courier New', monospace;
-    
-    /* Layout */
-    --main-width: 750px;
-    --gap: 24px;
-    --content-gap: 20px;
 }
 
-/* Force dark mode always */
+/* Base typography */
 body {
     font-family: var(--font-main);
     background-color: var(--theme);
@@ -388,4 +405,57 @@ button:hover {
 /* Improve spacing between homepage elements */
 .post-entry + .post-entry {
     margin-top: 24px;
+}
+
+/* Homepage intro */
+.home-info {
+    background-color: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 32px;
+}
+
+.home-info .entry-content {
+    color: var(--content);
+    font-size: 1.05em;
+}
+
+/* Series navigation box on posts */
+.series-box {
+    background-color: var(--entry);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-purple);
+    border-radius: 8px;
+    padding: 1em 1.5em;
+    margin: 1.5em 0;
+    font-size: 0.95em;
+}
+
+.series-box-title {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+
+.series-box ol {
+    padding-left: 1.25em;
+    margin: 0;
+}
+
+.series-box li {
+    margin-bottom: 0.25em;
+}
+
+/* Code blocks keep a dark background in both themes */
+.post-content pre code {
+    color: #e2e8f0;
+}
+
+/* Keep the header theme toggle as a plain icon, not a button block */
+#theme-toggle,
+#theme-toggle:hover {
+    background: none;
+    padding: 0;
+    color: var(--primary);
 }

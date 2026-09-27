@@ -1,6 +1,8 @@
 <script type="module">
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-  mermaid.initialize({ 
+  // Diagrams render once on load using the active theme
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  mermaid.initialize(isDark ? {
     startOnLoad: true,
     theme: 'dark',
     themeVariables: {
@@ -27,6 +29,14 @@
       activationBorderColor: '#66d9ef',
       activationBkgColor: '#3e3d32',
       sequenceNumberColor: '#f8f8f2'
+    }
+  } : {
+    startOnLoad: true,
+    theme: 'default',
+    themeVariables: {
+      background: 'transparent',
+      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+      fontSize: '16px'
     }
   });
 </script>

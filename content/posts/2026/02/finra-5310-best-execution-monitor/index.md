@@ -5,6 +5,7 @@ date: 2026-02-18T09:00:00-05:00
 draft: true
 tags: ["best-execution", "market-microstructure", "streaming-analytics", "nbbo", "kafka", "spark", "aws", "finra", "sec", "broker-dealer", "regulatory-tech", "compliance"]
 categories: ["engineering"]
+series: ["Regulated Markets on AWS"]
 description: "A deep dive into FINRA Rule 5310 Best Execution requirements, NBBO calculation, and execution quality metrics with real-time streaming implementation"
 aliases:
   - /posts/2026/02/real-time-best-execution-finra-5310/
@@ -62,7 +63,7 @@ The NBBO is:
 
 ### Computing NBBO in Real-Time
 
-```
+```mermaid
 graph LR
     Q1[NASDAQ Quote<br/>185.09/185.11] --> AGG[Aggregate<br/>by Symbol]
     Q2[NYSE Quote<br/>185.08/185.12] --> AGG
@@ -208,7 +209,7 @@ For execution quality measurement, we must use event time because:
 2. **Fair measurement**: Network latency shouldn't affect quality metrics
 3. **Reproducibility**: Historical analysis must match real-time results
 
-```
+```mermaid
 sequenceDiagram
     participant Market as Market Event
     participant Network as Network
@@ -237,7 +238,7 @@ This balances accuracy (waiting for late data) with latency (producing timely re
 
 Our reference implementation uses AWS serverless services to demonstrate real-time execution quality measurement:
 
-```
+```mermaid
 graph TB
     subgraph "Data Sources"
         QG[Quote Generator]
@@ -326,7 +327,7 @@ Real broker-dealer systems need additional capabilities:
 1. **Order lifecycle management**: Partial fills, cancellations, amendments
 2. **Multiple order types**: Limit, stop, trailing stop, etc.
 3. **Market impact analysis**: Large order handling
-4. **Regulatory reporting**: Rule 606, 607 reports
+4. **Regulatory reporting**: Rule 605 and 606 reports
 5. **Compliance controls**: Pre-trade risk checks
 6. **Audit and supervision**: Comprehensive logging and review
 
@@ -357,7 +358,6 @@ Understanding these concepts is valuable for:
 1. [FINRA Rule 5310 - Best Execution and Interpositioning](https://www.finra.org/rules-guidance/rulebooks/finra-rules/5310)
 2. [FINRA Annual Regulatory Oversight Report](https://www.finra.org/rules-guidance/guidance/reports/annual-regulatory-oversight-report)
 3. [SEC Regulation NMS](https://www.sec.gov/rules/final/34-51808.pdf)
-4. [SEC Best Execution Guidance](https://www.sec.gov/rules/interp/34-51808.pdf)
 
 ### Academic Research
 
@@ -378,6 +378,5 @@ Full source code, documentation, and deployment instructions:
 
 ---
 
-**Content Compliance Note**: This article paraphrases and summarizes information from the cited regulatory sources. Direct quotations are limited to ensure compliance with licensing restrictions. All factual claims are attributed to authoritative sources.
 
 **Disclaimer**: This article is for educational purposes only and does not constitute legal, financial, or compliance advice. Consult qualified professionals for regulatory obligations.
