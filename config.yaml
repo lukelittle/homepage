@@ -27,8 +27,6 @@ params:
   
   # Social icons
   socialIcons:
-    - name: "bluesky"
-      url: "https://bsky.app/profile/lukelittle.com"
     - name: "github"
       url: "https://github.com/lukelittle"
     - name: "linkedin"

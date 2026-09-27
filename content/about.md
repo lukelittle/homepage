@@ -26,4 +26,4 @@ I enjoy speaking with students, meetups, and engineering teams about cloud caree
 
 ## Get in touch
 
-The best way to reach me is to [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/). I'm also on [Bluesky](https://bsky.app/profile/lukelittle.com) and [GitHub](https://github.com/lukelittle), and you can follow along via [RSS](/index.xml).
+The best way to reach me is to [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/). My code is on [GitHub](https://github.com/lukelittle), and you can follow along via [RSS](/index.xml).
