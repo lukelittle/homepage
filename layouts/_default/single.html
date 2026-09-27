@@ -44,6 +44,8 @@
   </div>
   {{- end }}
 
+  {{- partial "post_cta.html" . }}
+
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
@@ -63,5 +65,10 @@
   {{- partial "comments.html" . }}
   {{- end }}
 </article>
+
+{{- /* The footer partial is cached per page type, so per-page scripts go here */}}
+{{- if strings.Contains .Content "class=\"mermaid\"" }}
+{{- partial "mermaid.html" . }}
+{{- end }}
 
 {{- end }}{{/* end main */}}

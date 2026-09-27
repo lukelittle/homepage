@@ -18,4 +18,16 @@
         {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
     </footer>
 </article>
+{{- with site.Params.homeFeatured }}
+<section class="start-here" aria-labelledby="start-here-title">
+    <h2 id="start-here-title">Start here</h2>
+    <ul>
+        {{- range . }}
+        {{- with site.GetPage . }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a><span>{{ .Description | default .Summary | plainify | truncate 110 }}</span></li>
+        {{- end }}
+        {{- end }}
+    </ul>
+</section>
+{{- end }}
 {{- end -}}

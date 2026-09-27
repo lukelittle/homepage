@@ -38,7 +38,7 @@ A 30-60-90 day plan for students to get hands-on cloud experience before their f
 
 I hosted Season 4 of Ippon's The Data Pour: real conversations about cloud, data, and AI with the people who build it.
 
-| Episode | Guest | |
+| Episode | Guest | Links |
 |---|---|---|
 | S4E1 | Me, interviewed by Andy Lamora | [Write-up]({{< relref "/posts/2025/11/the-data-pour-s4e1-luke-little" >}}) · [Watch](https://www.youtube.com/watch?v=ZyoRAQsS9c0) |
 | S4E2 | James Barney | [Write-up]({{< relref "/posts/2025/12/the-data-pour-s4e2-james-barney" >}}) · [Watch](https://youtu.be/ibtZckIQ_JI) |

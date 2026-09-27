@@ -1,0 +1,10 @@
+{{- /* Closing call to action on every post */ -}}
+{{- if eq .Section "posts" }}
+<aside class="post-cta">
+  <img src="{{ "images/avatar.png" | absURL }}" alt="" width="56" height="56">
+  <div>
+    <p class="post-cta-title">Thanks for reading.</p>
+    <p>I'm Luke. I build cloud and AI systems for banking and capital markets, and I lead the Richmond AWS User Group. If this was useful, or you'd like me to speak to your group, <a href="https://www.linkedin.com/in/lucaslittle/" rel="noopener" target="_blank">bug me on LinkedIn</a>. You can also follow along via <a href="{{ "index.xml" | absURL }}">RSS</a>.</p>
+  </div>
+</aside>
+{{- end }}

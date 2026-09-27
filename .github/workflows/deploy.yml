@@ -4,56 +4,83 @@ on:
   push:
     branches:
       - main
+  pull_request:       # Build-only check; AWS steps are skipped
   workflow_dispatch:  # Allow manual triggers
 
 permissions:
   id-token: write  # Required for OIDC authentication
   contents: read
 
+# Never run two deploys at once; let an in-progress deploy finish
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           submodules: true  # Fetch Hugo themes
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@f2acb7c5f695a87535fa8eb9040475c84c4f6909 # v3.2.1
         with:
-          hugo-version: 'latest'
+          # Pinned so builds only change when we change them; match your local version
+          hugo-version: '0.152.2'
           extended: true
 
       - name: Build site
-        run: hugo --minify
+        run: hugo --gc --minify
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        if: github.event_name != 'pull_request'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
       - name: Sync to S3
+        if: github.event_name != 'pull_request'
+        env:
+          BUCKET: ${{ secrets.S3_BUCKET_NAME }}
         run: |
-          # Sync static assets with longer cache
-          aws s3 sync public/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+          # Fingerprinted CSS/JS: the filename changes with the content, so cache forever
+          aws s3 sync public/assets/ "s3://$BUCKET/assets/" \
             --delete \
-            --cache-control "public, max-age=3600" \
+            --cache-control "public, max-age=31536000, immutable"
+
+          # Images, fonts, icons: cache for a day
+          aws s3 sync public/ "s3://$BUCKET/" \
+            --delete \
+            --exclude "assets/*" \
             --exclude "*.html" \
-            --exclude "*.xml"
-          
-          # Sync HTML/XML files with shorter cache (for content updates)
-          aws s3 sync public/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*.xml" \
+            --cache-control "public, max-age=86400"
+
+          # HTML: short cache so content updates show up quickly.
+          # --delete here removes pages that no longer exist.
+          aws s3 sync public/ "s3://$BUCKET/" \
+            --delete \
             --exclude "*" \
             --include "*.html" \
-            --include "*.xml" \
             --cache-control "public, max-age=300" \
             --content-type "text/html; charset=utf-8"
 
+          # RSS feeds and sitemap: always re-upload so they carry the XML content type
+          # (sync skips unchanged files, which would keep a stale type)
+          aws s3 cp public/ "s3://$BUCKET/" \
+            --recursive \
+            --exclude "*" \
+            --include "*.xml" \
+            --cache-control "public, max-age=300" \
+            --content-type "application/xml; charset=utf-8"
+
       - name: Invalidate CloudFront cache
+        if: github.event_name != 'pull_request'
         run: |
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
@@ -64,6 +91,7 @@ jobs:
           echo "Note: Cache invalidation may take 5-10 minutes to propagate globally"
 
       - name: Deployment summary
+        if: github.event_name != 'pull_request'
         run: |
           echo "✅ Deployment complete!"
           echo "🌐 Site: https://lukelittle.com"

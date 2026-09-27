@@ -2,6 +2,7 @@ baseURL: "https://lukelittle.com/"
 title: "Luke Little"
 languageCode: "en"
 theme: "PaperMod"
+enableRobotsTXT: true
 
 # Pagination
 pagination:
@@ -34,6 +35,17 @@ params:
     - name: "rss"
       url: "/index.xml"
 
+  # Link-preview image for pages without their own cover (homepage, About, Talks...)
+  images:
+    - "/images/og-default.png"
+
+  # "Start here" picks on the homepage (content paths)
+  homeFeatured:
+    - posts/2026/02/sec-15c3-5-market-access-controls
+    - posts/2026/02/prompt-to-production-safe-genai-aws
+    - posts/2026/02/the-missing-layer-in-your-enterprise-ai-stack-aws-bedrock-guardrails
+    - posts/2025/12/cracking-the-cloud
+
   # Browser/device icons (Safari's pinned-tab icon reuses the 32px favicon)
   assets:
     safari_pinned_tab: "/favicon-32x32.png"
@@ -49,6 +61,9 @@ params:
   ShowToc: true
   TocOpen: false
 
+  # Full post text in RSS, so feed readers don't have to click through
+  ShowFullTextinRSS: true
+
   # Show post metadata
   ShowReadingTime: true
   ShowPostNavLinks: true
@@ -61,6 +76,7 @@ outputs:
   home:
     - HTML
     - RSS
+    - JSON  # search index for /search/
 
 # Taxonomies
 taxonomies:
@@ -84,7 +100,7 @@ markup:
 menu:
   main:
     - name: Posts
-      url: /posts/
+      url: /archives/
       weight: 10
     - name: Series
       url: /series/
@@ -101,3 +117,6 @@ menu:
     - name: About
       url: /about/
       weight: 60
+    - name: Search
+      url: /search/
+      weight: 70

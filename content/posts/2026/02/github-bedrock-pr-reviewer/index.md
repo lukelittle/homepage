@@ -3,7 +3,7 @@ title: "Building a GitHub PR Reviewer with Bedrock Agents and Action Groups"
 slug: "github-bedrock-pr-reviewer"
 date: 2026-02-12T09:00:00-05:00
 draft: false
-tags: ["AWS", "Bedrock", "GitHub", "CI/CD", "Code Review", "Agents", "Serverless"]
+tags: ["AWS", "Bedrock", "GitHub", "CI-CD", "Code Review", "Agents", "Serverless"]
 categories: ["engineering"]
 description: "How to build an intelligent PR review agent that automatically analyzes pull requests and provides feedback using AWS Bedrock Agents"
 aliases:

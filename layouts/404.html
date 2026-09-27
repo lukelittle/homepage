@@ -1,0 +1,16 @@
+{{- define "main" }}
+<div class="not-found-page">
+  <p class="not-found-code">404</p>
+  <h1>That page doesn't exist</h1>
+  <p>It may have moved, or the link had a typo. Try one of these instead:</p>
+  <ul>
+    <li><a href="{{ "posts/" | absURL }}">All posts</a> or the <a href="{{ "archives/" | absURL }}">archive</a></li>
+    <li><a href="{{ "search/" | absURL }}">Search</a></li>
+    {{- range site.Params.homeFeatured }}
+    {{- with site.GetPage . }}
+    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{- end }}
+    {{- end }}
+  </ul>
+</div>
+{{- end }}

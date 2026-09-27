@@ -225,6 +225,13 @@ pre {
     margin: 1.5em 0;
 }
 
+/* Mermaid diagrams are <pre> blocks too; don't paint them like code */
+pre.mermaid {
+    background: transparent !important;
+    border: 0;
+    padding: 0;
+}
+
 pre code {
     background: transparent;
     border: none;
@@ -383,8 +390,7 @@ hr {
 }
 
 /* Button styling */
-.button,
-button {
+.button {
     background-color: var(--accent-teal);
     color: var(--theme);
     border: none;
@@ -394,8 +400,7 @@ button {
     transition: background-color 0.2s ease;
 }
 
-.button:hover,
-button:hover {
+.button:hover {
     background-color: var(--accent-teal-hover);
 }
 
@@ -405,14 +410,9 @@ button:hover {
     max-width: 750px;
 }
 
-/* Remove unwanted spacing at top of home page */
+/* Hide the floating back-to-top button on list pages */
 .list .top-link {
     display: none;
-}
-
-/* Improve spacing between homepage elements */
-.post-entry + .post-entry {
-    margin-top: 16px;
 }
 
 /* Homepage intro */
@@ -436,7 +436,7 @@ button:hover {
     height: 96px;
     border-radius: 50%;
     border: 2px solid var(--border);
-    background: #fff;
+    background: var(--entry);
 }
 
 @media (max-width: 600px) {
@@ -481,14 +481,6 @@ button:hover {
     color: #e2e8f0;
 }
 
-/* Keep the header theme toggle as a plain icon, not a button block */
-#theme-toggle,
-#theme-toggle:hover {
-    background: none;
-    padding: 0;
-    color: var(--primary);
-}
-
 /* About page photo: floats beside the intro on wide screens, stacks on phones */
 .about-photo {
     float: right;
@@ -514,4 +506,100 @@ button:hover {
 
 .post-content h2 {
     clear: both;
+}
+
+/* Homepage "Start here" picks */
+.start-here {
+    margin-bottom: 32px;
+}
+
+.start-here h2 {
+    font-size: 1.1em;
+    margin-bottom: 0.6em;
+}
+
+.start-here ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.start-here li {
+    display: grid;
+    gap: 2px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent-teal);
+}
+
+.start-here li a {
+    font-weight: 600;
+}
+
+.start-here li span {
+    color: var(--secondary);
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Closing call to action on posts */
+.post-cta {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background-color: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1em 1.4em;
+    margin: 2.5em 0 1.5em;
+    font-size: 0.95em;
+}
+
+.post-cta img {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--entry);
+}
+
+.post-cta p {
+    margin: 0;
+    color: var(--content);
+}
+
+.post-cta .post-cta-title {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.25em;
+}
+
+/* 404 */
+.not-found-page {
+    padding-block: 2em;
+}
+
+.not-found-code {
+    font-family: var(--font-code);
+    color: var(--accent-teal);
+    font-size: 0.95em;
+    margin-bottom: 0.25em;
+}
+
+.not-found-page ul {
+    padding-left: 1.2em;
+    margin-top: 0.75em;
+}
+
+.not-found-page li {
+    margin-bottom: 0.4em;
+}
+
+/* Keyboard focus is visible on the header toggle and back-to-top button */
+#theme-toggle:focus-visible,
+.top-link:focus-visible {
+    outline: 2px solid var(--accent-teal);
+    outline-offset: 2px;
 }
