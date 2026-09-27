@@ -6,9 +6,16 @@ tags: ["AWS", "GenAI", "Bedrock", "Security", "Compliance", "Enterprise"]
 categories: ["engineering"]
 description: "How to architect production-grade generative AI systems that meet enterprise security, compliance, and governance requirements with AWS Bedrock"
 cover:
-    image: "genai-reference-architecture.png"
-    alt: "Reference Architecture for Safe Generative AI on AWS for Regulated Environments"
+    image: "cover.png"
+    alt: "Title card: From Prompt to Production: Designing Safe Generative AI on AWS for Regulated Environments"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "From Prompt to Production: Safe Generative AI on AWS"
+    ghost: "GenAI"
+    chip: "Regulated environments"
 ---
 
 ## The Real Problem: Production, Not Prototypes

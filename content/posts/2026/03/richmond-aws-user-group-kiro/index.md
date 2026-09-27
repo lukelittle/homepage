@@ -4,10 +4,15 @@ date: 2026-03-05T19:00:00-05:00
 draft: false
 tags: ["AWS", "Kiro", "AI", "Software Development", "AWS User Group", "Richmond"]
 cover:
-    image: "richmond-aws-user-group-kiro-presentation.jpg"
+    image: "cover.jpg"
     alt: "Richmond AWS User Group Meetup featuring Kiro"
-    caption: "Richmond AWS User Group Presentation on Kiro"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "Meetup · Richmond AWS User Group · Mar 2026"
+    title: "Kiro at the Richmond AWS User Group"
+    photo: "richmond-aws-user-group-kiro-presentation.jpg"
 ---
 
 ## Richmond AWS User Group: An Evening of AI-Powered Development

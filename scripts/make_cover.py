@@ -16,7 +16,7 @@ Front matter example:
       relative: true
   hero:
       style: card              # or photo
-      color: reg               # reg | ai | talk
+      color: reg               # reg | ai | cloud | talk
       label: "Regulated Markets on AWS"
       title: "Designing Pre-Trade Risk Controls on AWS"   # optional, defaults to the post title
       ghost: "15c3-5"          # card only
@@ -41,7 +41,9 @@ FONTS = ROOT / "scripts" / "fonts"
 AVATAR = ROOT / "static" / "images" / "avatar.png"
 
 W, H = 1200, 630
-SERIES = {"reg": "#14b8a6", "ai": "#f59e0b", "talk": "#a78bfa"}
+# reg: Regulated Markets · ai: applied AI · cloud: AWS and infrastructure
+# talk: people (talks, podcasts, career, students)
+SERIES = {"reg": "#14b8a6", "ai": "#f59e0b", "cloud": "#38bdf8", "talk": "#a78bfa"}
 SLATE = "#0f172a"
 INK = "#0b1220"
 PAPER = "#f8fafc"

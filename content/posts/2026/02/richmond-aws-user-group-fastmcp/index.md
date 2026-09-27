@@ -4,10 +4,15 @@ date: 2026-02-05T19:00:00-05:00
 draft: false
 tags: ["AWS", "FastMCP", "AI Agents", "AWS User Group", "Richmond", "Model Context Protocol", "Discogs"]
 cover:
-    image: "richmond-aws-user-group-fastmcp-demo.jpeg"
+    image: "cover.jpg"
     alt: "Richmond AWS User Group - FastMCP Demo"
-    caption: "Richmond AWS User Group: FastMCP Demo on AWS"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "Talk · Richmond AWS User Group · Feb 2026"
+    title: "FastMCP Demo on AWS"
+    photo: "richmond-aws-user-group-fastmcp-demo.jpeg"
 ---
 
 ## Live Demonstration of FastMCP on AWS

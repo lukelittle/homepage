@@ -6,9 +6,15 @@ tags: ["data", "podcast", "cloud", "fintech", "resiliency", "AI", "banking", "ch
 categories: ["engineering"]
 description: "A conversation at Amélie's French bakery with Nimish Donde about cloud transformation in banking, why resiliency is a mindset, and how to unlock data for AI."
 cover:
-    image: "the-data-pour-s4e5-nimish-donde.png"
+    image: "cover.jpg"
     alt: "Data Pour Season 4 Episode 5 with Nimish Donde"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "The Data Pour · S4E5"
+    title: "Nimish Donde: Resiliency and Data Gravity"
+    photo: "the-data-pour-s4e5-nimish-donde.png"
 ---
 
 For this episode of Data Pour, I sat down with Nimish Donde—Head of Cloud Platform and Security Engineering at Truist—at Amélie's French bakery in Charlotte. It's a place that's been part of the city's fabric since 2008, growing from a single 24-hour location in NoDa (that I used to frequent during college) to four locations across Charlotte.

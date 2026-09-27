@@ -6,9 +6,16 @@ tags: ["AWS", "DynamoDB", "resilience", "DNS", "Global Tables", "multi-region", 
 categories: ["engineering"]
 description: "The October 20 DNS failures broke DynamoDB applications that should have been resilient. Here's why—and how to actually fix it."
 cover:
-    image: "surviving-dns-failures-dynamodb-multi-region.png"
-    alt: "Surviving DNS Failures with Multi-Region DynamoDB"
+    image: "cover.png"
+    alt: "Title card: What October 20 Taught Me About DynamoDB (and What It Didn't)"
     relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "AWS Resilience"
+    title: "What October 20 Taught Me About DynamoDB"
+    ghost: "DynamoDB"
+    chip: "Global Tables"
 ---
 
 On October 20, 2025, DNS resolution failed in AWS us-east-1, and with it, a lot of DynamoDB applications went down.
@@ -228,6 +235,8 @@ DNS-based failover that automatically routes to healthy endpoints. This works fo
 The uncomfortable truth: there's no perfect solution. Each approach has tradeoffs around complexity, blast radius, and new failure modes.
 
 ## Making the Survey App Actually Resilient
+
+![Surviving DNS Failures with Multi-Region DynamoDB](surviving-dns-failures-dynamodb-multi-region.png)
 
 Let's revisit the serverless survey application. The original architecture:
 

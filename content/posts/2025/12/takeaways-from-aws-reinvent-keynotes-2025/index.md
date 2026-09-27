@@ -6,9 +6,16 @@ tags: ["AWS", "re:Invent", "AI", "cloud", "Trainium"]
 categories: ["engineering"]
 description: "My take on AWS re:Invent 2025 keynotes—AWS is democratizing AI the same way they democratized infrastructure 15 years ago."
 cover:
-    image: "takeaways-from-aws-reinvent-keynotes-2025.png"
-    alt: "AWS re:Invent 2025 - Keep Inventing"
+    image: "cover.png"
+    alt: "Title card: AWS re:Invent 2025: Democratizing AI (Again)"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "AWS re:Invent 2025"
+    title: "Democratizing AI (Again)"
+    ghost: "re:Invent"
+    chip: "Keynote takeaways"
 ---
 
 AWS re:Invent 2025 keynotes felt like AWS repeating the same move they pulled 15 years ago—democratizing something that used to be gated behind massive budgets and specialized teams. This time it's AI.

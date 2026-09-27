@@ -9,9 +9,16 @@ description: "How to build a cost optimization agent that analyzes your AWS spen
 aliases:
   - /posts/2026/02/cost-optimization-agent-bedrock-explorer/
 cover:
-    image: "aws-bedrock-cost-optimization-architecture.png"
-    alt: "Architecture diagram showing a cost optimization agent built with AWS Bedrock and Cost Explorer API"
+    image: "cover.png"
+    alt: "Title card: Building a Cost Optimization Agent with AWS Bedrock and Cost Explorer"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "Building a Cost Optimization Agent with Amazon Bedrock"
+    ghost: "Cost"
+    chip: "Bedrock · Cost Explorer"
 ---
 
 Managing AWS costs becomes increasingly complex as infrastructure grows. Organizations often struggle with cloud cost management, spending valuable engineering time manually analyzing Cost Explorer data, identifying optimization opportunities, and implementing changes. Even with dedicated cost management tools, the analysis and remediation process remains largely manual, requiring specialized expertise to interpret cost data and translate it into actionable steps.
@@ -45,6 +52,8 @@ This solution addresses cost management challenges across different contexts:
 **Multi-Cloud Strategies**: While this implementation focuses on AWS, the architecture pattern can be extended to analyze costs across multiple cloud providers, giving organizations a unified view of optimization opportunities.
 
 ## Architecture overview
+
+![Architecture diagram showing a cost optimization agent built with AWS Bedrock and Cost Explorer API](aws-bedrock-cost-optimization-architecture.png)
 
 Here's the high-level architecture:
 

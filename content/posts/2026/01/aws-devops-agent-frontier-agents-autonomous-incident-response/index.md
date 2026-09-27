@@ -6,9 +6,16 @@ tags: ["AWS", "DevOps", "AI", "automation", "incident-response", "frontier-agent
 categories: ["engineering"]
 description: "How AWS's frontier agents are changing incident response forever - an autonomous DevOps engineer that works while you sleep"
 cover:
-    image: "aws-devops-agent-frontier-agents-autonomous-incident-response.png"
-    alt: "Your AI On-Call Engineer: Inside AWS DevOps Agent"
+    image: "cover.png"
+    alt: "Title card: Your AI On-Call Engineer: Inside AWS DevOps Agent"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "Your AI On-Call Engineer: Inside AWS DevOps Agent"
+    ghost: "on-call"
+    chip: "AWS DevOps Agent"
 ---
 
 At re:Invent 2024, AWS CEO Matt Garman announced something that made me stop and actually pay attention during a keynote—which doesn't happen often.

@@ -35,7 +35,7 @@ cover:
     relative: true          # needed so link previews find the image
 hero:
     style: "card"           # or "photo" (then add photo: "photo.jpg")
-    color: "reg"            # reg | ai | talk
+    color: "reg"            # reg | ai | cloud | talk
     label: "Regulated Markets on AWS"
     ghost: "15c3-5"
     chip: "SEC Rule 15c3-5"

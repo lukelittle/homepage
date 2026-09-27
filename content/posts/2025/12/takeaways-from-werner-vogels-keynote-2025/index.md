@@ -6,9 +6,16 @@ tags: ["AI", "career", "software-development", "future-of-work"]
 categories: ["engineering"]
 description: "Thoughts on AI, the future of development, and what it means to be a builder in an era of rapid technological change."
 cover:
-    image: "takeaways-from-werner-vogels-keynote-2025.png"
-    alt: "Takeaways from Werner Vogels' re:Invent 2025 Keynote"
+    image: "cover.png"
+    alt: "Title card: AI, Uncertainty, and the Rise of the Renaissance Developer"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "AWS re:Invent 2025"
+    title: "AI, Uncertainty, and the Rise of the Renaissance Developer"
+    ghost: "Build"
+    chip: "Werner Vogels keynote"
 ---
 
 When I talk to students — especially STEM students — one question keeps coming up: "Is AI going to take my job?" They ask it jokingly, but you can tell they're serious. What they want is assurance. They want to know there's a light at the end of the tunnel. That the late nights, the debt, the effort, and the hope they've poured into their degree will amount to something real.

@@ -6,9 +6,16 @@ tags: ["AWS", "serverless", "AI", "Kiro", "Lambda", "DynamoDB", "Kinesis", "Cogn
 categories: ["engineering"]
 description: "Building a production-ready URL shortener with Kiro: spec-driven development, smart architecture decisions, and why AI coding assistants are game-changers"
 cover:
-    image: "building-serverless-url-shortener-ai-assisted-kiro.png"
-    alt: "15 Hours of Terraform in 3: Building with AWS Kiro"
+    image: "cover.png"
+    alt: "Title card: 15 Hours of Terraform in 3: Building with AWS Kiro"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "15 Hours of Terraform in 3: Building with AWS Kiro"
+    ghost: "3h"
+    chip: "Kiro · Terraform"
 ---
 
 At an AWS Road Show this fall, Darko Mesaros demoed a URL shortener he'd built in Rust called [krtk.rs](https://github.com/darko-mesaros/krtk). Something about watching a clean, fast URL shortener just *work* stuck with me. I've built a few of these for demos since then, but I wanted to try something different this time: build one in Python with a retro 90s vibe, and let Kiro handle most of the heavy lifting.
@@ -36,6 +43,8 @@ Then I got detailed with requirements:
 The decoupled visit counting was critical—I've seen too many URL shorteners block redirects waiting for analytics writes. That's how you turn a 50ms redirect into a 150ms redirect.
 
 ## What Kiro generated
+
+![15 Hours of Terraform in 3: Building with AWS Kiro](building-serverless-url-shortener-ai-assisted-kiro.png)
 
 Kiro produced a comprehensive 15-section specification document covering functional requirements, API contracts, data models, security, and cost analysis. This spec became the foundation for everything else.
 

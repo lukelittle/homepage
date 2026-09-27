@@ -6,9 +6,16 @@ tags: ["AI", "agents", "OpenClaw", "moltbots", "governance", "enterprise", "perm
 categories: ["technology"]
 description: "On the critical governance gap revealed by OpenClaw and the molting of our mental models around AI agents and enterprise permissions"
 cover:
-    image: "the-week-of-the-moltbots.png"
-    alt: "The Week of the Moltbots - OpenClaw and autonomous agents"
+    image: "cover.png"
+    alt: "Title card: The Week of the Moltbots"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "The Week of the Moltbots"
+    ghost: "agents"
+    chip: "AI agent governance"
 ---
 
 I wrote [this article for Ippon](https://blog.ippon.tech/openclaw-and-the-molting-of-enterprise-ai-governance) on February 10, 2026. The enthusiasm around projects like [OpenClaw](https://openclaw.ai/)—an open-source framework enabling autonomous task execution across messaging platforms, file systems, and enterprise APIs—reveals a critical blind spot in enterprise technology governance.

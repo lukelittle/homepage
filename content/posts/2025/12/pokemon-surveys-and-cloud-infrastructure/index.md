@@ -6,9 +6,16 @@ tags: ["AWS", "Serverless", "Lambda", "API Gateway", "DynamoDB", "Terraform", "e
 categories: ["engineering", "education"]
 description: "Creating a small survey app to teach the cloud and explain its power."
 cover:
-    image: "pokemon-surveys-and-cloud-infrastructure.png"
-    alt: "Pokémon Surveys and Cloud Infrastructure"
+    image: "cover.png"
+    alt: "Title card: Pokémon Surveys, Serverless Architecture, and Teaching Students to Build on AWS"
     relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "Teaching Cloud"
+    title: "Pokémon Surveys and Teaching Students to Build on AWS"
+    ghost: "Serverless"
+    chip: "Lambda · API Gateway · DynamoDB"
 ---
 
 Back in November, I was preparing for the Cracking the Cloud presentation at UNC Charlotte. I needed a way to explain how the cloud fundamentally changed what's possible on the internet—not through abstract concepts, but through something students could immediately relate to.
@@ -42,6 +49,8 @@ That's what I wanted students to understand. Not that AWS has a lot of services.
 ---
 
 ## The demo: a survey students could actually participate in
+
+![Pokémon Surveys and Cloud Infrastructure](pokemon-surveys-and-cloud-infrastructure.png)
 
 To drive the point home, I didn't just talk about Thomas Game Docs surveys.
 

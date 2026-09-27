@@ -6,9 +6,15 @@ tags: ["data", "podcast", "education", "AI", "mobile-development", "UNCC"]
 categories: ["engineering"]
 description: "A conversation at UNC Charlotte's PORTAL about why students love his mobile dev course, embracing AI in education, and his advice for breaking into tech: build."
 cover:
-    image: "the-data-pour-s4e4-dr-mohamed-shehab.png"
+    image: "cover.jpg"
     alt: "Data Pour Season 4 Episode 4 with Dr. Mohamed Shehab"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "The Data Pour · S4E4"
+    title: "Dr. Mohamed Shehab: Build, Build, Build"
+    photo: "the-data-pour-s4e4-dr-mohamed-shehab.png"
 ---
 
 For this episode, I visited the PORTAL building at UNC Charlotte to sit down with Dr. Mohamed Shehab—a professor whose mobile development course keeps showing up in conversations with students as one of the most impactful experiences of their degree.

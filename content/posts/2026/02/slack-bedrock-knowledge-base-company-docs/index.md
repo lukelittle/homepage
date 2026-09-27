@@ -9,9 +9,16 @@ description: "How to build a company documentation Q&A bot using AWS Bedrock Kno
 aliases:
   - /posts/2026/02/slack-qa-bot-bedrock-knowledge-base/
 cover:
-    image: "slack-bedrock-knowledge-base-architecture.png"
-    alt: "Architecture diagram showing a Slack bot connected to AWS Bedrock Knowledge Bases"
+    image: "cover.png"
+    alt: "Title card: Building a Company Knowledge Bot: Slack + Bedrock Knowledge Bases"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "Building a Company Knowledge Bot"
+    ghost: "RAG"
+    chip: "Slack · Bedrock Knowledge Bases"
 ---
 
 "Where can I find our vacation policy?" "What's the process for requesting new hardware?" "Can you explain our security guidelines?" These questions echo through company Slack channels daily, interrupting workflows and creating redundant work for team leads and HR staff. The same questions get asked repeatedly, and answers are buried in documentation that's difficult to navigate.
@@ -80,6 +87,8 @@ A key feature is automatic synchronization. When documents in your S3 bucket are
 Traditional search systems match keywords, but Bedrock Knowledge Bases understands concepts. If someone asks about "time off," it can retrieve documents about "vacation," "PTO," and "leave of absence" because it understands these concepts are related—even if they don't share exact keywords.
 
 ## Architecture Overview
+
+![Architecture diagram showing a Slack bot connected to AWS Bedrock Knowledge Bases](slack-bedrock-knowledge-base-architecture.png)
 
 Here's how the solution components work together:
 

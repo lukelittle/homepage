@@ -3,9 +3,16 @@ title: "The Missing Layer in Your Enterprise AI Stack: AWS Bedrock Guardrails"
 date: 2026-02-28T12:00:00-05:00
 draft: false
 cover:
-    image: "aws-bedrock-guardrails-architecture.png"
-    alt: "AWS Bedrock Guardrails Architecture"
+    image: "cover.png"
+    alt: "Title card: The Missing Layer in Your Enterprise AI Stack: AWS Bedrock Guardrails"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "The Missing Layer in Your Enterprise AI Stack"
+    ghost: "Guardrails"
+    chip: "Amazon Bedrock"
 ---
 
 Everyone wants to ship AI into production. Almost no one wants to own what happens when it goes wrong.

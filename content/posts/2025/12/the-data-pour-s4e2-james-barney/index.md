@@ -6,9 +6,15 @@ tags: ["data", "podcast", "AI", "big-data", "cloud", "fintech"]
 categories: ["engineering"]
 description: "A conversation with James Barney at People's Market in Myers Park, Charlotte—from big data infrastructure to enterprise AI realities."
 cover:
-    image: "the-data-pour-s4e2-james-barney.png"
+    image: "cover.jpg"
     alt: "Data Pour Season 4 Episode 2 with James Barney"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "The Data Pour · S4E2"
+    title: "James Barney: From Big Data to AI"
+    photo: "the-data-pour-s4e2-james-barney.png"
 ---
 
 We filmed this episode of Data Pour at People's Market in Myers Park, Charlotte—grabbed drinks, hit record, and got into the kind of conversation that happens when two people who grew up in "big data" start comparing notes on where AI is actually headed.

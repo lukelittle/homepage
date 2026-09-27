@@ -6,9 +6,16 @@ tags: ["AWS", "Hugo", "CloudFront", "Terraform", "infrastructure"]
 categories: ["engineering"]
 description: "I tried to launch a Hugo site on AWS and ended up doing four hours of DNS archaeology and CloudFront forensics."
 cover:
-    image: "hugo-blog-aws-side-quest.png"
-    alt: "Hugo Blog AWS Architecture Diagram"
+    image: "cover.png"
+    alt: "Title card: I Tried to Deploy a Simple Website on AWS. It Became a Full-Blown Side Quest."
     relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "Building This Site"
+    title: "I Tried to Deploy a Simple Website on AWS"
+    ghost: "$3/yr"
+    chip: "Hugo · CloudFront · Terraform"
 ---
 
 Recently I came across another engineer's personal blog — clean layout, good typography, that "I actually finish my side projects" energy — and it pushed me to finally build one of my own.

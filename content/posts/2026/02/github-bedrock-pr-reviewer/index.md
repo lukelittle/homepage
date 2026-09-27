@@ -9,9 +9,16 @@ description: "How to build an intelligent PR review agent that automatically ana
 aliases:
   - /posts/2026/02/github-pr-reviewer-bedrock-action-groups/
 cover:
-    image: "github-bedrock-pr-reviewer-architecture.png"
-    alt: "Architecture diagram showing a GitHub PR reviewer built with AWS Bedrock Agents"
+    image: "cover.png"
+    alt: "Title card: Building a GitHub PR Reviewer with Bedrock Agents and Action Groups"
     relative: true
+hero:
+    style: "card"
+    color: "ai"
+    label: "Applied AI"
+    title: "Building a GitHub PR Reviewer with Bedrock Agents"
+    ghost: "PR"
+    chip: "Bedrock Agents"
 ---
 
 Code reviews are essential for maintaining code quality, but they can be time-consuming and often repetitive. Developers find themselves commenting on the same issues across multiple pull requests: missing tests, inconsistent naming, inadequate error handling, and numerous other routine concerns. This creates a bottleneck in the development process, as team members wait for their code to be reviewed while reviewers struggle to balance thorough reviews with their own development work.
@@ -46,6 +53,8 @@ This solution addresses common development challenges across different contexts:
 **Onboarding New Team Members**: New developers on a project receive immediate feedback on their work that helps them understand team coding standards more quickly, accelerating their integration into the team.
 
 ## Architecture overview
+
+![Architecture diagram showing a GitHub PR reviewer built with AWS Bedrock Agents](github-bedrock-pr-reviewer-architecture.png)
 
 Here's how the system works:
 

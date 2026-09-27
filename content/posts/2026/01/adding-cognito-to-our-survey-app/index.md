@@ -6,9 +6,16 @@ tags: ["AWS", "Cognito", "Serverless", "Lambda", "Authentication", "Security"]
 categories: ["engineering"]
 description: "How we added secure user authentication to our serverless survey app using AWS Cognito"
 cover:
-    image: "adding-cognito-to-our-survey-app.png"
-    alt: "Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App"
+    image: "cover.png"
+    alt: "Title card: Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App"
     relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "Teaching Cloud"
+    title: "Adding Cognito Authentication to a Serverless App"
+    ghost: "Cognito"
+    chip: "Amazon Cognito"
 ---
 
 # Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App
@@ -49,6 +56,8 @@ Before we add authentication, let's visualize how our serverless application cur
 Right now, anyone can call our API endpoints. There's no way to verify who's making the request or prevent abuse.
 
 ## The Plan: Integrating Cognito
+
+![Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App](adding-cognito-to-our-survey-app.png)
 
 We'll use a **Cognito User Pool** to manage our users. Think of it as a user database with built-in authentication logic. Here's the high-level plan:
 

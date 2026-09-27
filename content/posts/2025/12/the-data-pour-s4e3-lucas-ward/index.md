@@ -6,9 +6,15 @@ tags: ["data", "podcast", "consulting", "leadership", "AI", "career"]
 categories: ["engineering"]
 description: "A conversation with Lucas Ward at Charlotte Beer Garden about leading people in consulting, enterprise vs midsize engineering, and AI readiness."
 cover:
-    image: "the-data-pour-s4e3-lucas-ward.png"
+    image: "cover.jpg"
     alt: "Data Pour Season 4 Episode 3 with Lucas Ward"
     relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "The Data Pour · S4E3"
+    title: "Lucas Ward: Staying Curious in the AI Era"
+    photo: "the-data-pour-s4e3-lucas-ward.png"
 ---
 
 For this episode of Data Pour, I sat down with Lucas Ward—one of my SWE managers and a senior technical manager at Ippon—to talk about what it actually looks like to lead people in a consulting practice while the industry is shifting under our feet.

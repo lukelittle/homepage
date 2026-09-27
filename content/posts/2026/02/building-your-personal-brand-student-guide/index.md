@@ -6,9 +6,16 @@ tags: ["student branding", "personal site", "portfolio", "Hugo", "GitHub Pages",
 categories: ["education"]
 description: "How to build a professional online presence in 10 minutes using the student-branding-starter template—a production-ready Hugo website deployed on GitHub Pages to showcase your projects and writing"
 cover:
-    image: "building-your-personal-brand-student-guide.png"
-    alt: "Student Branding Starter - Sample Portfolio Website"
+    image: "cover.png"
+    alt: "Title card: Building Your Personal Brand: A Student's Guide to Online Presence"
     relative: true
+hero:
+    style: "card"
+    color: "talk"
+    label: "Career"
+    title: "Building Your Personal Brand: A Student's Guide"
+    ghost: "Portfolio"
+    chip: "Student guide"
 ---
 
 What does your online presence say about you?
@@ -71,6 +78,8 @@ The student-branding-starter template deploys to GitHub Pages, which hosts stati
 Most other portfolio platforms either charge recurring fees or place your content behind their branding. With this approach, you invest only time, not money - and you maintain complete ownership of your content.
 
 ## What You're Building
+
+![Student Branding Starter - Sample Portfolio Website](building-your-personal-brand-student-guide.png)
 
 Let's talk about what you're actually getting with the student-branding-starter template.
 

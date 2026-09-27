@@ -6,9 +6,16 @@ tags: ["AWS", "outage", "resilience", "DynamoDB", "DNS", "us-east-1", "architect
 categories: ["engineering", "cloud"]
 description: "What happened during the October 20 AWS outage, how to communicate impact to leadership, and the critical questions every team should ask about their infrastructure resilience"
 cover:
-    image: "explaining-october-20-aws-outage.png"
-    alt: "Learning from the October 20 AWS Outage"
+    image: "cover.png"
+    alt: "Title card: Learning from the October 20 AWS Outage: Questions Every Team Should Ask"
     relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "AWS Resilience"
+    title: "Learning from the October 20 AWS Outage"
+    ghost: "us-east-1"
+    chip: "Oct 20, 2025"
 ---
 
 On the morning of October 20, AWS us-east-1 services were degraded—in particular, DNS services for DynamoDB. Most of us didn't find out from monitoring alerts or dashboards. We found out because the apps on our phones stopped working.
