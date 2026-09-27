@@ -808,7 +808,6 @@ Ready to build your personal brand? Here's your action plan:
 - **Markdown Guide:** [The Markdown Guide](https://www.markdownguide.org/)
 - **Content Ideas:** [dev.to/t/beginners](https://dev.to/t/beginners) for inspiration
 - **Hugo Documentation:** [Hugo Docs](https://gohugo.io/documentation/)
-- **Example Student Sites:** Browse the [student-branding-starter discussions](https://github.com/lukelittle/student-branding-starter/discussions) for real examples
 
 ### Commit to Consistency
 

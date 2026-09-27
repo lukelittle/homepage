@@ -482,14 +482,16 @@ hr {
 }
 
 /* About page photo: floats beside the intro on wide screens, stacks on phones */
-.about-photo {
+.about-photo,
+.speaker-photo {
     float: right;
     width: 38%;
     max-width: 280px;
     margin: 0.25em 0 1em 1.75em;
 }
 
-.about-photo img {
+.about-photo img,
+.speaker-photo img {
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -497,7 +499,8 @@ hr {
 }
 
 @media (max-width: 600px) {
-    .about-photo {
+    .about-photo,
+    .speaker-photo {
         float: none;
         width: 70%;
         margin: 0 auto 1.5em;
@@ -602,4 +605,14 @@ hr {
 .top-link:focus-visible {
     outline: 2px solid var(--accent-teal);
     outline-offset: 2px;
+}
+
+.speaker-photo figcaption {
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 0.4em;
+}
+
+.clear {
+    clear: both;
 }

@@ -7,6 +7,32 @@ ShowReadingTime: false
 
 I like talking about cloud careers, AWS architecture, and building with AI, especially with students and early-career engineers. If you'd like me to speak at your school, meetup, or team, [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
 
+## Speaker kit
+
+Organizing an event? Everything you need to promote a talk is here.
+
+<figure class="speaker-photo">
+  <img src="/images/luke-headshot.jpg" alt="Headshot of Luke Little" width="780" height="1000">
+  <figcaption><a href="/images/luke-headshot.jpg" download>Download headshot</a></figcaption>
+</figure>
+
+**Short bio**
+
+Luke Little is Head of Intelligent Data and Cloud at Ippon Technologies, where he leads cloud, data, and AI infrastructure work. He is the lead organizer of the Richmond AWS User Group and an MBA candidate at Duke's Fuqua School of Business.
+
+**Longer bio**
+
+Luke Little is Head of Intelligent Data and Cloud at Ippon Technologies, where he leads cloud, data, and AI infrastructure work, much of it for banking and capital markets. His career runs from baking to banking to cloud consulting, and he writes at lukelittle.com about building regulated systems on AWS and running AI safely in production. Luke is the lead organizer of the Richmond AWS User Group, hosted Season 4 of Ippon's podcast The Data Pour, and regularly speaks to computing students about breaking into cloud careers. He serves on the UNC Charlotte Alumni Board of Directors and is pursuing an MBA at Duke's Fuqua School of Business.
+
+**Topics I speak on**
+
+- **Cracking the Cloud.** How students and early-career engineers can stand out with certifications, real projects, and relationships, even in a tough market.
+- **AI guardrails and governance.** How to run generative AI safely in regulated industries: guardrails, governance design, and audit trails.
+- **Agentic AI on AWS.** Building and operating AI agents with MCP and Amazon Bedrock, usually as a live demo.
+- **Regulated systems on AWS.** Streaming architectures for SEC and FINRA rules like market access controls and margin monitoring.
+
+<div class="clear"></div>
+
 ## Talks
 
 **Cracking the Cloud (2026 edition)**\

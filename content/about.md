@@ -9,7 +9,7 @@ ShowReadingTime: false
   <img src="/images/luke.jpg" alt="Luke Little mid-kick on a steep cobblestone street, with mountains behind him" width="928" height="1400">
 </figure>
 
-I'm Luke Little. My career started in baking, moved into banking, and ended up in cloud consulting, and I wouldn't trade any of the detours. These days I build cloud and AI systems for banking and capital markets, and I spend a lot of my spare time helping engineers, teams, and students level up. I'm also pursuing my MBA at Duke's Fuqua School of Business (Class of 2028), and I serve on the UNC Charlotte Alumni Board of Directors.
+I'm Luke Little. My career started in baking, moved into banking, and ended up in cloud consulting, and I wouldn't trade any of the detours. Today I'm Head of Intelligent Data and Cloud at [Ippon Technologies](https://ipponusa.com/), where I lead our cloud, data, and AI infrastructure work. I build cloud and AI systems for banking and capital markets, and I spend a lot of my spare time helping engineers, teams, and students level up. I'm also pursuing my MBA at Duke's Fuqua School of Business (Class of 2028), and I serve on the UNC Charlotte Alumni Board of Directors.
 
 This site is where I write about what I've learned, what I'm learning, and what I think matters.
 
