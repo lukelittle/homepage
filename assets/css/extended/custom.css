@@ -257,6 +257,7 @@ pre code {
 
 /* Footer */
 .footer {
+    max-width: none;
     background-color: var(--entry);
     border-top: 1px solid var(--border);
     color: var(--secondary);
