@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Generate a post's cover image from the `hero:` block in its front matter.
 
-Two styles (see README "Cover images"):
+One template, two variants, in the site's own fonts (Inter + Fira Code):
 
-  card   Title card for technical posts: slate grid, series color bar,
-         ghosted detail (like a rule number), chip, avatar.
-  photo  A real photo in a comic frame: halftone dots, ink border,
-         caption box. For talks, events and personal posts.
+  card   Slate background with a faint grid and a ghosted detail (like a
+         rule number). For technical posts.
+  photo  The same card with a photo filling the right side, faded into the
+         slate behind the title. For talks, events and personal posts.
 
 Front matter example:
 
   cover:
-      image: "cover.png"
+      image: "cover.png"       # cover.jpg for photo style
       alt: "..."
       relative: true
   hero:
@@ -19,9 +19,11 @@ Front matter example:
       color: reg               # reg | ai | cloud | talk
       label: "Regulated Markets on AWS"
       title: "Designing Pre-Trade Risk Controls on AWS"   # optional, defaults to the post title
-      ghost: "15c3-5"          # card only
-      chip: "SEC Rule 15c3-5"  # card only
+      ghost: "15c3-5"          # card only; dropped if too long to fit
+      chip: "SEC Rule 15c3-5"  # optional
       photo: "photo.jpg"       # photo only, relative to the post folder
+      focus: [0.3, 0.4]        # photo only, optional: which part of the photo
+                               # to keep when cropping (x, y from 0 to 1)
 
 The image is written next to index.md as cover.png (card) or cover.jpg (photo).
 
@@ -34,7 +36,7 @@ import sys
 from pathlib import Path
 
 import yaml
-from PIL import Image, ImageChops, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 FONTS = ROOT / "scripts" / "fonts"
@@ -46,8 +48,7 @@ SCALE = 2           # render at 2x so covers stay crisp on high-density screens
 # talk: people (talks, podcasts, career, students)
 SERIES = {"reg": "#14b8a6", "ai": "#f59e0b", "cloud": "#38bdf8", "talk": "#a78bfa"}
 SLATE = "#0f172a"
-INK = "#0b1220"
-PAPER = "#f8fafc"
+SLATE_RGB = (15, 23, 42)
 
 
 def font(name, size, variation=None):
@@ -57,16 +58,12 @@ def font(name, size, variation=None):
     return f
 
 
-def sans(size):
-    return font("InstrumentSans-wdth-wght.ttf", size, "Bold")
+def inter(size, weight="Bold"):
+    return font("Inter-opsz-wght.ttf", size, weight)
 
 
-def mono(size, weight="Bold"):
-    return font("JetBrainsMono-wght.ttf", size, weight)
-
-
-def comic(size):
-    return font("Bangers-Regular.ttf", size)
+def fira(size, weight="SemiBold"):
+    return font("FiraCode-wght.ttf", size, weight)
 
 
 def wrap(draw, text, fnt, max_width, spacing=0):
@@ -112,12 +109,16 @@ def balanced(draw, text, fnt, max_width, spacing=0):
     return wrap(draw, text, fnt, hi, spacing)
 
 
-def fit_title(draw, text, make_font, sizes, max_width, max_lines, spacing=0):
-    for size in sizes:
-        fnt = make_font(size)
-        lines = balanced(draw, text, fnt, max_width, spacing)
-        if len(lines) <= max_lines:
-            return fnt, lines, size
+def fit_title(draw, text, make_font, sizes, max_width, max_lines, spacing=0, two_line_sizes=None):
+    """Prefer two lines, but only at the larger sizes (two_line_sizes); a long
+    title gets three lines at full size rather than two tiny ones."""
+    passes = [(two_line_sizes or sizes, 2), (sizes, max_lines)]
+    for size_list, limit in passes:
+        for size in size_list:
+            fnt = make_font(size)
+            lines = balanced(draw, text, fnt, max_width, spacing)
+            if len(lines) <= limit:
+                return fnt, lines, size
     return fnt, lines, size
 
 
@@ -131,109 +132,111 @@ def circle_avatar(size):
     return bg
 
 
-def card(hero, title):
-    """Title card, drawn at SCALE x the 1200x630 design size."""
+def render(hero, title, photo_path=None):
+    """Draw a cover at SCALE x the 1200x630 design size."""
     k = SCALE
     w, h = W * k, H * k
     color = SERIES[hero.get("color", "reg")]
     img = Image.new("RGBA", (w, h), SLATE)
-    grid = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    g = ImageDraw.Draw(grid)
-    for x in range(0, w, 48 * k):
-        g.line([(x, 0), (x, h)], fill=(148, 163, 184, 18), width=k)
-    for y in range(0, h, 48 * k):
-        g.line([(0, y), (w, y)], fill=(148, 163, 184, 18), width=k)
-    img = Image.alpha_composite(img, grid)
+    text_w = 820 * k
 
-    # Ghosted detail, outline only, bleeding off the right edge
-    ghost = hero.get("ghost")
-    if ghost:
-        layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        gd = ImageDraw.Draw(layer)
-        gf = mono(170 * k)
-        gw = gd.textlength(ghost, font=gf)
-        gd.text((w - gw + 14 * k, h - (84 + 170) * k), ghost, font=gf, fill=(0, 0, 0, 0),
-                stroke_width=2 * k, stroke_fill=(148, 163, 184, 60))
-        img = Image.alpha_composite(img, layer)
+    if photo_path:
+        # Photo fills the right ~64%, fading into the slate behind the title
+        pw = int(w * 0.64)
+        src = ImageOps.exif_transpose(Image.open(photo_path)).convert("RGBA")
+        focus = tuple(hero.get("focus", (0.5, 0.4)))
+        img.paste(ImageOps.fit(src, (pw, h), Image.LANCZOS, centering=focus), (w - pw, 0))
+        fade = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        fd = ImageDraw.Draw(fade)
+        # Fade from solid slate at the photo's left edge to a light tint by
+        # ~56% across, so most of the photo stays visible
+        x0, x1 = w - pw, int(w * 0.56)
+        for x in range(w):
+            if x < x0:
+                a = 255
+            elif x > x1:
+                a = 55
+            else:
+                a = int(255 - 200 * ((x - x0) / (x1 - x0)) ** 0.7)
+            fd.line([(x, 0), (x, h)], fill=SLATE_RGB + (a,))
+        img = Image.alpha_composite(img, fade)
+        text_w = 600 * k
+    else:
+        grid = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        g = ImageDraw.Draw(grid)
+        for x in range(0, w, 48 * k):
+            g.line([(x, 0), (x, h)], fill=(148, 163, 184, 16), width=k)
+        for y in range(0, h, 48 * k):
+            g.line([(0, y), (w, y)], fill=(148, 163, 184, 16), width=k)
+        img = Image.alpha_composite(img, grid)
+
+        # Ghosted detail, outline only; shrinks to fit or is left out
+        ghost = hero.get("ghost")
+        if ghost:
+            layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+            ld = ImageDraw.Draw(layer)
+            size, max_w = 190 * k, 470 * k
+            while size > 90 * k and ld.textlength(ghost, font=fira(size, "Medium")) > max_w:
+                size -= 4 * k
+            gf = fira(size, "Medium")
+            if ld.textlength(ghost, font=gf) <= max_w:
+                gw = ld.textlength(ghost, font=gf)
+                bottom = ld.textbbox((0, 0), ghost, font=gf)[3]
+                ld.text((w - 64 * k - gw, h - 118 * k - bottom), ghost, font=gf, fill=(0, 0, 0, 0),
+                        stroke_width=2 * k, stroke_fill=(148, 163, 184, 52))
+                img = Image.alpha_composite(img, layer)
 
     d = ImageDraw.Draw(img)
-    d.rectangle((0, 0, 16 * k, h), fill=color)
+    d.rectangle((0, 0, 14 * k, h), fill=color)
 
-    left, right = 78 * k, w - 60 * k
-    spaced(d, (left, 54 * k), hero.get("label", "").upper(), mono(16 * k), color, 2 * k)
+    left = 72 * k
+    spaced(d, (left, 58 * k), hero.get("label", "").upper(), fira(19 * k), color, 2.5 * k)
 
-    sizes = tuple(v * k for v in (64, 58, 52, 46))
-    fnt, lines, size = fit_title(d, title, sans, sizes, 900 * k, 3)
+    sizes = tuple(v * k for v in (70, 64, 58, 54, 50))
+    fnt, lines, size = fit_title(d, title, inter, sizes, text_w, 3,
+                                 two_line_sizes=tuple(v * k for v in (70, 64, 58)))
     line_h = int(size * 1.1)
-    block_h = line_h * len(lines)
-    top = 92 * k + (h - (92 + 110) * k - block_h) // 2
+    top = 100 * k + (h - 220 * k - line_h * len(lines)) // 2
+    if photo_path:
+        # Soft shadow so the title stays readable where it overlaps the photo
+        shadow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        sd = ImageDraw.Draw(shadow)
+        for i, line in enumerate(lines):
+            sd.text((left, top + i * line_h), line, font=fnt, fill=SLATE_RGB + (230,))
+        shadow = shadow.filter(ImageFilter.GaussianBlur(10 * k))
+        img = Image.alpha_composite(img, shadow)
+        d = ImageDraw.Draw(img)
     for i, line in enumerate(lines):
-        d.text((left, top + i * line_h), line, font=fnt, fill="#e2e8f0")
+        d.text((left, top + i * line_h), line, font=fnt, fill=(241, 245, 249))
 
     # Footer: chip on the left, avatar + site on the right
-    foot_y = h - 70 * k
+    foot_y = h - 76 * k
     chip = hero.get("chip")
     if chip:
-        cf = mono(17 * k, "Medium")
+        cf = fira(20 * k, "Medium")
         cw = d.textlength(chip, font=cf)
-        d.rounded_rectangle((left, foot_y - 8 * k, left + cw + 26 * k, foot_y + 28 * k), radius=6 * k,
-                            outline=(148, 163, 184, 110), width=2 * k)
-        d.text((left + 13 * k, foot_y - 1 * k), chip, font=cf, fill="#cbd5e1")
-    sf = mono(17 * k, "Medium")
+        d.rounded_rectangle((left, foot_y - 10 * k, left + cw + 28 * k, foot_y + 32 * k), radius=7 * k,
+                            fill=SLATE_RGB + (200,), outline=(148, 163, 184, 130), width=2 * k)
+        d.text((left + 14 * k, foot_y - 1 * k), chip, font=cf, fill=(226, 232, 240))
+    sf = fira(20 * k, "Medium")
     site = "lukelittle.com"
     sw = d.textlength(site, font=sf)
-    d.text((right - sw, foot_y - 1 * k), site, font=sf, fill="#94a3b8")
-    av = circle_avatar(40 * k)
-    img.paste(av, (int(right - sw - 52 * k), foot_y - 10 * k), av)
+    right = w - 64 * k
+    if photo_path:  # keep the site mark readable over the photo
+        d.rounded_rectangle((right - sw - 70 * k, foot_y - 14 * k, right + 16 * k, foot_y + 36 * k),
+                            radius=25 * k, fill=SLATE_RGB + (190,))
+    d.text((right - sw, foot_y - 1 * k), site, font=sf, fill=(203, 213, 225))
+    av = circle_avatar(46 * k)
+    img.paste(av, (int(right - sw - 58 * k), foot_y - 12 * k), av)
     return img.convert("RGB")
 
 
+def card(hero, title):
+    return render(hero, title)
+
+
 def photo(hero, title, folder):
-    """Comic-framed photo, drawn at SCALE x the 1200x630 design size."""
-    k = SCALE
-    w, h = W * k, H * k
-    color = SERIES[hero.get("color", "talk")]
-    pad, border = 20 * k, 7 * k
-    img = Image.new("RGB", (w, h), PAPER)
-
-    # Photo cropped to fill the frame, with a halftone dot overlay
-    fw, fh = w - 2 * pad, h - 2 * pad
-    src = ImageOps.exif_transpose(Image.open(folder / hero["photo"])).convert("RGB")
-    framed = ImageOps.fit(src, (fw, fh), Image.LANCZOS, centering=hero.get("focus", (0.5, 0.4)))
-    dots = Image.new("RGB", (fw, fh), "white")
-    dd = ImageDraw.Draw(dots)
-    step, r = 10 * k, 2.1 * k
-    for y in range(0, fh, step):
-        for x in range(0, fw, step):
-            dd.ellipse((x - r, y - r, x + r, y + r), fill=(206, 210, 217))
-    framed = ImageChops.multiply(framed, dots)
-    img.paste(framed, (pad, pad))
-    d = ImageDraw.Draw(img)
-    d.rectangle((pad, pad, w - pad - 1, h - pad - 1), outline=INK, width=border)
-
-    # Caption box, bottom-left, with a hard offset shadow in the series color
-    box_left, box_w = 48 * k, 700 * k
-    badge_font = mono(15 * k)
-    badge = hero.get("label", "").upper()
-    sizes = tuple(v * k for v in (58, 52, 46, 40))
-    tf, lines, size = fit_title(d, title.upper(), comic, sizes, box_w - 52 * k, 2, spacing=1.5 * k)
-    line_h = int(size * 1.02)
-    badge_h = 32 * k
-    box_h = 26 * k + badge_h + 14 * k + line_h * len(lines) + 22 * k
-    box_top = h - 48 * k - box_h
-    shadow = 12 * k
-    d.rectangle((box_left + shadow, box_top + shadow, box_left + box_w + shadow, box_top + box_h + shadow), fill=color)
-    d.rectangle((box_left, box_top, box_left + box_w, box_top + box_h), fill="white", outline=INK, width=border)
-
-    bx, by = box_left + 26 * k, box_top + 24 * k
-    bw = spaced_width(d, badge, badge_font, 1.8 * k) + 22 * k
-    d.rectangle((bx, by, bx + bw, by + badge_h), fill=color, outline=INK, width=3 * k)
-    spaced(d, (bx + 11 * k, by + 6 * k), badge, badge_font, INK, 1.8 * k)
-
-    ty = by + badge_h + 14 * k
-    for i, line in enumerate(lines):
-        spaced(d, (bx, ty + i * line_h), line, tf, INK, 1.5 * k)
-    return img
+    return render(hero, title, folder / hero["photo"])
 
 
 def front_matter(path):

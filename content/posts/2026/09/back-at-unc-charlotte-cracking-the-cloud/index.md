@@ -15,6 +15,7 @@ hero:
     label: "Talk · UNC Charlotte · Sep 2026"
     title: "Cracking the Cloud, post-Hugging Face"
     photo: "photo.jpg"
+    focus: [0.0, 0.4]
 ---
 
 <!--

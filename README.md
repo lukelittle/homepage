@@ -25,8 +25,9 @@ GitHub Actions handles the rest (build → upload to S3 → invalidate CloudFron
 
 ### Cover images
 
-Covers are generated from a `hero:` block in the post's front matter
-(title cards for technical posts, comic-framed photos for talks and events):
+Covers are generated from a `hero:` block in the post's front matter. There's
+one template in the site's fonts, as a plain title card for technical posts or
+with a photo on the right for talks and events:
 
 ```yaml
 cover:
@@ -37,8 +38,10 @@ hero:
     style: "card"           # or "photo" (then add photo: "photo.jpg")
     color: "reg"            # reg | ai | cloud | talk
     label: "Regulated Markets on AWS"
-    ghost: "15c3-5"
+    ghost: "15c3-5"         # card only; left out if it's too long to fit
     chip: "SEC Rule 15c3-5"
+    # photo style: photo: "photo.jpg", and optionally focus: [0.2, 0.4]
+    # to choose which part of the photo stays in frame
 ```
 
 ```bash
@@ -47,7 +50,7 @@ python3 scripts/make_cover.py --all
 ```
 
 Needs Pillow and PyYAML (`pip install pillow pyyaml`). Fonts are in
-`scripts/fonts/` (Bangers, Instrument Sans, JetBrains Mono; all SIL Open Font License).
+`scripts/fonts/` (Inter and Fira Code, SIL Open Font License).
 
 ### Running locally
 
