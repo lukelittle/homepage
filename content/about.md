@@ -6,8 +6,7 @@ ShowReadingTime: false
 ---
 
 <figure class="about-photo">
-  <img src="/images/luke-guatemala.jpg" alt="Luke Little mid-kick on a steep cobblestone street in Guatemala, with mountains behind him" width="928" height="1400">
-  <figcaption>Guatemala</figcaption>
+  <img src="/images/luke-guatemala.jpg" alt="Luke Little mid-kick on a steep cobblestone street, with mountains behind him" width="928" height="1400">
 </figure>
 
 I'm Luke Little. My career started in baking, moved into banking, and ended up in cloud consulting, and I wouldn't trade any of the detours. These days I build cloud and AI systems for banking and capital markets, and I spend a lot of my spare time helping engineers, teams, and students level up. I'm also pursuing my MBA at Duke's Fuqua School of Business (Class of 2028), and I serve on the UNC Charlotte Alumni Board of Directors.
