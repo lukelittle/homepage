@@ -15,7 +15,7 @@ Back at UNC Charlotte, this time as a member of the alumni board, on how student
 <!-- TODO: add [Write-up](...) link once the post is published -->
 
 **AI guardrails and governance in regulated industries**\
-<!-- TODO: add venue -->August 2026\
+Richmond AWS User Group · August 2026\
 How guardrails wrap model invocations, and how to design governance strategies for AI where compliance matters.
 <!-- TODO: add [Write-up](...) link once the post is published -->
 
@@ -48,4 +48,4 @@ I hosted Season 4 of Ippon's The Data Pour: real conversations about cloud, data
 
 ## Community
 
-I'm active in the **Richmond AWS User Group**. Recent meetups include [FastMCP on AWS]({{< relref "/posts/2026/02/richmond-aws-user-group-fastmcp" >}}) and [a session on Kiro]({{< relref "/posts/2026/03/richmond-aws-user-group-kiro" >}}).
+I'm active in the **Richmond AWS User Group**. Recent meetups include AI guardrails and governance (August 2026), [FastMCP on AWS]({{< relref "/posts/2026/02/richmond-aws-user-group-fastmcp" >}}) and [a session on Kiro]({{< relref "/posts/2026/03/richmond-aws-user-group-kiro" >}}).

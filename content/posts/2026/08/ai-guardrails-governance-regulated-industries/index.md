@@ -1,18 +1,20 @@
 ---
-title: "Speaking on AI Guardrails: Governance Strategies for Regulated Industries"
+title: "Richmond AWS User Group: AI Guardrails and Governance for Regulated Industries"
 date: 2026-08-13T19:00:00-04:00
 draft: true
 tags: ["AWS", "AI", "Bedrock", "Security", "Compliance", "governance", "Enterprise"]
 categories: ["engineering"]
-description: "Notes from my presentation on AI guardrails and how I approach designing governance strategies for AI in regulated industries."
+description: "Notes from my Richmond AWS User Group presentation on AI guardrails and how I approach designing governance strategies for AI in regulated industries."
 cover:
     image: "hero.png"
-    alt: "Luke Little presenting on AI guardrails and governance for regulated industries"
+    alt: "Luke Little presenting on AI guardrails and governance at the Richmond AWS User Group"
 ---
 
-On August 13th I gave a presentation on AI guardrails, focused on how I approach designing governance strategies for AI in regulated industries. This is a topic I spend a lot of my time on, and it was good to step back from the day-to-day and talk through the patterns that keep coming up.
+On August 13th I presented at the Richmond AWS User Group on AI guardrails, focused on how I approach designing governance strategies for AI in regulated industries. This is a topic I spend a lot of my time on, and it was good to step back from the day-to-day and talk through the patterns that keep coming up.
 
-<!-- TODO(Luke): venue / audience / who invited you -->
+It was good to be back in front of this group after the [FastMCP demo]({{< relref "/posts/2026/02/richmond-aws-user-group-fastmcp" >}}) earlier this year.
+
+<!-- TODO(Luke): anything about the audience or turnout worth mentioning -->
 
 ## The Problem Isn't the Model
 
