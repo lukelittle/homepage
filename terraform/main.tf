@@ -114,6 +114,7 @@ resource "aws_acm_certificate" "website" {
 resource "aws_cloudfront_distribution" "website" {
   enabled             = true
   is_ipv6_enabled     = true
+  http_version        = "http2and3"
   comment             = "CloudFront distribution for ${var.domain_name}"
   default_root_object = "index.html"
   price_class         = var.cloudfront_price_class
@@ -130,17 +131,12 @@ resource "aws_cloudfront_distribution" "website" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "S3-${var.domain_name}"
 
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
+    # AWS managed "CachingOptimized": respects the Cache-Control headers the
+    # deploy workflow sets, and compresses with Brotli as well as gzip
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.security.id
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600   # 1 hour
-    max_ttl                = 86400  # 24 hours
     compress               = true
 
     function_association {
@@ -174,6 +170,35 @@ resource "aws_cloudfront_distribution" "website" {
 }
 
 # ========================================
+# Security Headers
+# ========================================
+
+resource "aws_cloudfront_response_headers_policy" "security" {
+  name    = "homepage-security-headers"
+  comment = "Security headers for ${var.domain_name}"
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = true
+      preload                    = false
+      override                   = true
+    }
+    content_type_options {
+      override = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+  }
+}
+
+# ========================================
 # S3 Bucket Policy for CloudFront OAC
 # ========================================
 
@@ -201,9 +226,31 @@ data "aws_iam_policy_document" "website_bucket_policy" {
       values   = [aws_cloudfront_distribution.website.arn]
     }
   }
+
+  # Without ListBucket, S3 answers 403 for missing pages and visitors see an
+  # XML "AccessDenied" error; with it, they get a 404 and the site's 404 page
+  statement {
+    sid    = "AllowCloudFrontListBucket"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+
+    actions   = ["s3:ListBucket"]
+    resources = [aws_s3_bucket.website.arn]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.website.arn]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "website" {
+
   bucket = aws_s3_bucket.website.id
   policy = data.aws_iam_policy_document.website_bucket_policy.json
 }

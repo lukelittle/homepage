@@ -44,7 +44,8 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:lukelittle/homepage:*"]
+      # Only deploys from main can assume this role (not PRs or other branches)
+      values = ["repo:lukelittle/homepage:ref:refs/heads/main"]
     }
   }
 }
@@ -84,7 +85,6 @@ data "aws_iam_policy_document" "github_actions_s3" {
       "s3:PutObject",
       "s3:GetObject",
       "s3:DeleteObject",
-      "s3:PutObjectAcl",
     ]
 
     resources = [
@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "github_actions_cloudfront" {
       "cloudfront:GetInvalidation",
     ]
 
-    resources = ["*"]
+    resources = [aws_cloudfront_distribution.website.arn]
   }
 }
 

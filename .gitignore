@@ -8,7 +8,6 @@ hugo_stats.json
 
 # Terraform
 terraform/.terraform/
-terraform/.terraform.lock.hcl
 terraform/*.tfstate
 terraform/*.tfstate.*
 terraform/terraform.tfvars
@@ -20,3 +19,6 @@ terraform/terraform.tfvars
 # Node (if needed for any tooling)
 node_modules/
 package-lock.json
+
+# Local Terraform backend settings (see terraform/backend.tf)
+terraform/backend.hcl

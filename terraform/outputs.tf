@@ -36,9 +36,9 @@ output "acm_certificate_validation_records" {
   description = "DNS validation records for ACM certificate - ADD THESE TO ROUTE 53"
   value = {
     for dvo in aws_acm_certificate.website.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      type   = dvo.resource_record_type
-      value  = dvo.resource_record_value
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      value = dvo.resource_record_value
     }
   }
 }
@@ -50,7 +50,7 @@ output "github_actions_role_arn" {
 
 output "route53_dns_instructions" {
   description = "Instructions for Route 53 DNS setup"
-  value = <<-EOT
+  value       = <<-EOT
     
     ====================================
     NEXT STEPS: Route 53 Configuration
