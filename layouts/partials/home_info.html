@@ -1,0 +1,21 @@
+{{- /* Overrides PaperMod's home_info to add the avatar beside the intro */ -}}
+{{- with site.Params.homeInfoParams }}
+<article class="first-entry home-info">
+    <div class="home-info-body">
+        {{- with .Avatar }}
+        <img class="home-info-avatar" src="{{ . | absURL }}" alt="{{ site.Params.author }}" width="96" height="96">
+        {{- end }}
+        <div>
+            <header class="entry-header">
+                <h1>{{ .Title | markdownify }}</h1>
+            </header>
+            <div class="entry-content">
+                {{ .Content | markdownify }}
+            </div>
+        </div>
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+</article>
+{{- end -}}

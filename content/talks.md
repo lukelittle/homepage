@@ -9,6 +9,16 @@ I like talking about cloud careers, AWS architecture, and building with AI, espe
 
 ## Talks
 
+**Cracking the Cloud (2026 edition)**\
+UNC Charlotte · September 2026\
+Back at UNC Charlotte, this time as a member of the alumni board, on how students can stand out in a tough market with certifications, projects, and relationships.
+<!-- TODO: add [Write-up](...) link once the post is published -->
+
+**AI guardrails and governance in regulated industries**\
+<!-- TODO: add venue -->August 2026\
+How guardrails wrap model invocations, and how to design governance strategies for AI where compliance matters.
+<!-- TODO: add [Write-up](...) link once the post is published -->
+
 **Cracking the Cloud: How AWS Certifications Can Launch Your Career**\
 Virginia Commonwealth University, Department of Computer Science · March 2026\
 A session for CS seniors on standing out with certifications, self-directed projects, and real relationships.\

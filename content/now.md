@@ -7,9 +7,9 @@ ShowReadingTime: false
 
 *Last updated: September 2026. This is a [now page](https://nownownow.com/about).*
 
-<!-- TODO(Luke): replace these with what you're actually focused on -->
+<!-- TODO(Luke): fill in Building -->
 
 - **Writing:** finishing the [Regulated Markets on AWS](/series/regulated-markets-on-aws/) series.
 - **Building:** 
-- **Learning:** 
-- **Speaking:** 
+- **Learning:** working through my MBA at Duke (Class of 2028).
+- **Speaking:** fresh off [Cracking the Cloud](/talks/) at UNC Charlotte in September.
