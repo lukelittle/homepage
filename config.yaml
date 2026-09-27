@@ -27,10 +27,10 @@ params:
   
   # Social icons
   socialIcons:
-    - name: "github"
-      url: "https://github.com/lukelittle"
     - name: "linkedin"
       url: "https://www.linkedin.com/in/lucaslittle/"
+    - name: "github"
+      url: "https://github.com/lukelittle"
     - name: "rss"
       url: "/index.xml"
 
