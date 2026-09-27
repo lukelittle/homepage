@@ -5,11 +5,11 @@ ShowPostNavLinks: false
 ShowReadingTime: false
 ---
 
-I like talking about cloud careers, AWS architecture, and building with AI, especially with students and early-career engineers. If you'd like me to speak at your school, meetup, or team, [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
+I like talking about cloud careers, AWS architecture, and building with AI, especially with students and early-career engineers. If you'd like me to speak at your school, meetup, or team, [book a 30-minute call](https://calendly.com/lukelittle/30min) or [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
 
 ## Speaker kit
 
-Organizing an event? Everything you need to promote a talk is here.
+Organizing an event? Everything you need to promote a talk is here. To talk dates and format, [book a 30-minute call](https://calendly.com/lukelittle/30min).
 
 <figure class="speaker-photo">
   <img src="/images/luke-headshot.jpg" alt="Headshot of Luke Little" width="780" height="1000">
