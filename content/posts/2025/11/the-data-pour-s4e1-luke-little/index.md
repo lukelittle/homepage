@@ -27,3 +27,5 @@ Filming at Wooden Robot added an unexpected layer to the experience. Between the
 
 If you want to watch me awkwardly navigate my first time on camera — before I technically became the host — the episode is here:
 https://www.youtube.com/watch?v=ZyoRAQsS9c0
+
+*Season 4 has since wrapped. Every episode is on the [Talks](/talks/) page.*

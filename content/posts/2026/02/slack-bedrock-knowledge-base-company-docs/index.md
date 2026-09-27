@@ -143,7 +143,7 @@ The initial data synchronization process will take several minutes depending on 
 Now let's create an agent that will use our Knowledge Base:
 
 1. In the Bedrock console, go to "Agents" → "Create agent"
-2. Name it "CompanyDocsAssistant" and select Claude Sonnet 3.5 for the foundation model
+2. Name it "CompanyDocsAssistant" and select Claude 3.5 Sonnet for the foundation model
 3. In the "Action groups" section, add a Knowledge Base action group and select the "CompanyDocs" knowledge base we created
 4. Configure the agent's instructions with detailed guidance:
 
@@ -324,4 +324,4 @@ The real power here is that your data remains within your AWS account, the syste
 
 This solution demonstrates how easily companies can now deploy practical AI applications using managed services. What used to require a specialized ML team and months of development can now be built in days using serverless components.
 
-What documentation would you connect to your knowledge bot first? Let me know in the comments or on Twitter!
+What documentation would you connect to your knowledge bot first? Let me know [on LinkedIn](https://www.linkedin.com/in/lucaslittle/)!

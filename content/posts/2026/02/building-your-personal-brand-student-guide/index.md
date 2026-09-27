@@ -2,9 +2,9 @@
 title: "Building Your Personal Brand: A Student's Guide to Online Presence"
 date: 2026-02-15T09:00:00-05:00
 draft: false
-tags: ["student branding", "personal site", "portfolio", "Hugo", "GitHub Pages", "career development", "technical writing", "web development"]
+tags: ["student branding", "personal site", "portfolio", "Hugo", "GitHub Pages", "career", "technical writing", "web development"]
 categories: ["education"]
-description: "How to build a professional online presence in 10 minutes using the student-branding-starter template—a production-ready Hugo website deployed on GitHub Pages to showcase your projects and writing"
+description: "Build a professional online presence in 10 minutes with the student-branding-starter template: a Hugo site on GitHub Pages for your projects."
 cover:
     image: "cover.png"
     alt: "Title card: Building Your Personal Brand: A Student's Guide to Online Presence"
@@ -281,7 +281,7 @@ The front matter (section between `---` lines) contains metadata about your post
 
 Below the front matter, you write your content using Markdown, which is a simple formatting syntax. A typical post might include headings, code blocks, lists, and images:
 
-```markdown
+````markdown
 ## Project Overview
 
 This post documents my process building a simple data visualization tool.
@@ -310,6 +310,7 @@ plt.ylabel('Temperature (°C)')
 plt.grid(True)
 plt.show()
 ```
+````
 
 When your post is ready to publish:
 
@@ -454,7 +455,7 @@ This overrides the default styles without modifying theme files.
 
 While `yourusername.github.io/repository-name` works well, a custom domain like `yourname.com` looks more professional:
 
-1. Purchase a domain from Namecheap, Google Domains, or similar
+1. Purchase a domain from Namecheap, Cloudflare, Porkbun, or similar
 2. In your repository, go to **Settings → Pages**
 3. Under "Custom domain", enter your domain name
 4. Set up DNS records as instructed

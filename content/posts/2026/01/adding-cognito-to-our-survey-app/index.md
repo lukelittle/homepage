@@ -18,8 +18,6 @@ hero:
     chip: "Amazon Cognito"
 ---
 
-# Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App
-
 Our serverless survey application is a great example of a modern cloud native application. It's fast, scalable, and cost-effective. But it's missing one critical feature: user authentication. In this post, we'll walk through how to add robust, secure authentication using AWS Cognito.
 
 ## Why Add Authentication?

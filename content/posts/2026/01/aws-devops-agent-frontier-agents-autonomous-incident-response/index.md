@@ -18,7 +18,7 @@ hero:
     chip: "AWS DevOps Agent"
 ---
 
-At re:Invent 2024, AWS CEO Matt Garman announced something that made me stop and actually pay attention during a keynote—which doesn't happen often.
+At re:Invent 2025, AWS CEO Matt Garman announced something that made me stop and actually pay attention during a keynote—which doesn't happen often.
 
 He introduced **frontier agents**: AI systems that don't just help you write code or answer questions. They work autonomously for hours or days, maintaining context, investigating problems, and making decisions without you holding their hand.
 
@@ -114,7 +114,7 @@ You can structure Agent Spaces multiple ways:
 - **Per-team:** One space per on-call team
 - **Centralized:** One space in monitoring account observing everything
 
-Here's whatmakes this not just "magic AI with root access": DevOps Agent uses explicit, auditable IAM trust relationships.
+Here's what makes this not just "magic AI with root access": DevOps Agent uses explicit, auditable IAM trust relationships.
 
 The Agent Space role trust policy:
 - **Principal:** `aidevops.amazonaws.com` (not some opaque service)
@@ -241,7 +241,7 @@ DevOps Agent is currently only available in us-east-1.
 
 If you have data residency requirements (GDPR, finance, healthcare), this is a blocker. Cross-region investigations require routing everything through us-east-1.
 
-Mitigration: Deploy Agent Space in us-east-1, use cross-account associations to observe other regions. AWS will probably expand regions post-GA.
+Mitigation: Deploy Agent Space in us-east-1, use cross-account associations to observe other regions. AWS will probably expand regions post-GA.
 
 ### 2. Investigation vs action
 
@@ -298,9 +298,9 @@ This is the future of operations. Not because AI replaces engineers, but because
 
 The question isn't whether agentic operations are coming—they're here. The question is whether you'll be ready when GA drops.
 
-If you're experimenting with this or have questions, reach out. The technology is moving fast, and we're all figuring it out together.
+If you're experimenting with this or have questions, [reach out on LinkedIn](https://www.linkedin.com/in/lucaslittle/). The technology is moving fast, and we're all figuring it out together.
 
 **Resources:**
-- [AWS DevOps Agent User Guide](https://docs.aws.amazon.com/devops-agent/)
+- [AWS DevOps Agent User Guide](https://docs.aws.amazon.com/devopsagent/latest/userguide/)
 - [Terraform Sample Repo](https://github.com/aws-samples/sample-aws-devops-agent-terraform)
 - [AWS Frontier Agents Overview](https://aws.amazon.com/ai/frontier-agents)

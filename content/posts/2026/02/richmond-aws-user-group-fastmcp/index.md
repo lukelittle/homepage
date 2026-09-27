@@ -1,8 +1,9 @@
 ---
 title: "Richmond AWS User Group: FastMCP Demo on AWS"
+description: "A live, unrehearsed demo at the Richmond AWS User Group: building a FastMCP server on AWS that lets an AI agent query my vinyl collection."
 date: 2026-02-05T19:00:00-05:00
 draft: false
-tags: ["AWS", "FastMCP", "AI Agents", "AWS User Group", "Richmond", "Model Context Protocol", "Discogs"]
+tags: ["AWS", "FastMCP", "agents", "AWS User Group", "Richmond", "MCP", "Discogs"]
 cover:
     image: "cover.jpg"
     alt: "Richmond AWS User Group - FastMCP Demo"
@@ -23,11 +24,11 @@ The February meetup of the Richmond AWS User Group featured a hands-on demonstra
 
 What made this demonstration particularly authentic was that I hadn't tested the solution beforehand. Armed with an impressively detailed prompt I'd crafted ([available on GitHub](https://github.com/lukelittle/rawsug-fastmcp-demo/blob/main/prompt.txt)), I wanted to make this a genuinely live experience—including all the potential hiccups and surprises that come with real AI development.
 
-As part of my introduction, I surveyed attendees about their programming language preferences and AI tooling adoption. Interestingly, only about half were currently using agentic coding tools like Kiro or Claude code in their workflows, highlighting the adoption curve many teams are still navigating.
+As part of my introduction, I surveyed attendees about their programming language preferences and AI tooling adoption. Interestingly, only about half were currently using agentic coding tools like Kiro or Claude Code in their workflows, highlighting the adoption curve many teams are still navigating.
 
 ## Going Beyond the Theory
 
-Unlike high-level overviews that often gloss over implementation details, this talk walked through a real working example. I connected an AI agent to my personal record album collection hosted on a website and worked toward building a page where the model could answer specific questions about that collection. This was an evolution of the project I described in my [January article on FastMCP and the Vinyl Collection Chatbot](../../../2026/01/mcp-fastmcp-universal-translator-ai-agents/).
+Unlike high-level overviews that often gloss over implementation details, this talk walked through a real working example. I connected an AI agent to my personal record album collection hosted on a website and worked toward building a page where the model could answer specific questions about that collection. This was an evolution of the project I described in my [January article on FastMCP and the Vinyl Collection Chatbot]({{< relref "/posts/2026/01/mcp-fastmcp-universal-translator-ai-agents" >}}).
 
 The demo highlighted some important realities of working with AI agents: even with carefully prepared prompts, much of the work involves orchestration, managing component spin-up times, and making adjustments throughout the development process. 
 

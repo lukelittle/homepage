@@ -18,9 +18,9 @@ hero:
     chip: "Kiro · Terraform"
 ---
 
-At an AWS Road Show this fall, Darko Mesaros demoed a URL shortener he'd built in Rust called [krtk.rs](https://github.com/darko-mesaros/krtk). Something about watching a clean, fast URL shortener just *work* stuck with me. I've built a few of these for demos since then, but I wanted to try something different this time: build one in Python with a retro 90s vibe, and let Kiro handle most of the heavy lifting.
+At an AWS Road Show this fall, Darko Mesaros demoed a URL shortener he'd built in Rust called [krtk.rs](https://github.com/darko-mesaros/krtk.rs). Something about watching a clean, fast URL shortener just *work* stuck with me. I've built a few of these for demos since then, but I wanted to try something different this time: build one in Python with a retro 90s vibe, and let Kiro handle most of the heavy lifting.
 
-Kiro is one of AWS's three frontier agents announced at re:Invent 2024—autonomous AI systems that maintain context and work independently for hours. While DevOps Agent handles incident response and Security Agent conducts penetration testing, Kiro is your AI developer that takes specifications and generates production-ready code.
+Kiro is one of AWS's three frontier agents announced at re:Invent 2025—autonomous AI systems that maintain context and work independently for hours. While DevOps Agent handles incident response and Security Agent conducts penetration testing, Kiro is your AI developer that takes specifications and generates production-ready code.
 
 This turned into a great experiment in spec-driven AI development. Here's what I learned about building with AI coding assistants.
 
@@ -70,7 +70,7 @@ The visit counting architecture is particularly clever:
 2. Lambda immediately returns a 301 redirect (fast!)
 3. *Then* it fires an event to Kinesis (fire-and-forget, non-blocking)
 4. Kinesis batches up events
-5. A consumer Lambda processes batches and updates DynamoDB counts atom ically
+5. A consumer Lambda processes batches and updates DynamoDB counts atomically
 
 This approach delivers redirects under 200ms and reduces DynamoDB writes by 100x. For a link getting 1,000 clicks/minute, that's the difference between $75/month and $0.75/month just for counting.
 
@@ -148,7 +148,7 @@ Kiro generated production-quality code across multiple areas:
 
 **Lambda functions:** All eight Python functions came with error handling, structured logging, and CloudWatch metrics built in.
 
-**Cost modeling:** Kiro accurately estimated ~$15/month for 100K redirects. For comparison,running this on containers would cost 10x more.
+**Cost modeling:** Kiro accurately estimated ~$15/month for 100K redirects. For comparison, running this on containers would cost 10x more.
 
 I even asked Kiro if the system was production-ready:
 

@@ -428,7 +428,7 @@ They can delete everything and recreate it in minutes. That alone teaches more t
 
 Remember the Flask app I built for Thomas Game Docs' Pokémon survey?
 
-I monitored that deployment closely. Every time she dropped an announcement on social media—Twitter, YouTube community posts, etc—I watched the app response time blow up. We were constantly aware that we were one viral tweet away from needing to manually scale the Heroku dyno or upgrade the database.
+I monitored that deployment closely. Every time she dropped an announcement on social media—Twitter, YouTube community posts, etc.—I watched the app response time blow up. We were constantly aware that we were one viral tweet away from needing to manually scale the Heroku dyno or upgrade the database.
 
 With this serverless version? **There wouldn't have been a hiccup.**
 

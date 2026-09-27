@@ -1,8 +1,9 @@
 ---
 title: "Speaking at VCU: Cracking the Cloud and the Evolution of AWS Learning"
+description: "Speaking to VCU computer science seniors about standing out with AWS certifications, self-directed projects, and real relationships."
 date: 2026-03-03T09:00:00-05:00
 draft: false
-tags: ["AWS", "Education", "Cloud Computing", "Career Development", "VCU"]
+tags: ["AWS", "Education", "cloud", "career", "VCU"]
 cover:
     image: "cover.jpg"
     alt: "Speaking at Virginia Commonwealth University about AWS"

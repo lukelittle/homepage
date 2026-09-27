@@ -1,5 +1,6 @@
 ---
 title: "Richmond AWS User Group Presentation on Kiro"
+description: "Recap of the March Richmond AWS User Group meetup, where AWS's Dinesh Balaaji Prabakaran demoed Kiro, the agentic IDE."
 date: 2026-03-05T19:00:00-05:00
 draft: false
 tags: ["AWS", "Kiro", "AI", "Software Development", "AWS User Group", "Richmond"]

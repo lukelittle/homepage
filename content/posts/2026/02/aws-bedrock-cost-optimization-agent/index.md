@@ -348,7 +348,7 @@ Now let's create the agent that will orchestrate the entire analysis process:
 
 1. In the Bedrock console, go to "Agents" → "Create agent"
 2. Name it "CostOptimizationAgent"
-3. Select Claude Sonnet 3.5 for the foundation model
+3. Select Claude 3.5 Sonnet for the foundation model
 4. Create three action groups:
    
    a. **GetCostData**

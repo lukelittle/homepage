@@ -25,7 +25,7 @@ hero:
 
 The Model Context Protocol (MCP) is an open standard for connecting AI agents to external systems. Think of it as a universal adapter that lets any AI agent talk to any tool or data source without custom integration code.
 
-Anthropic announced MCP in November 2024 and donated it to the Linux Foundation's Agentic AI Foundation a month later. The adoption has been swift: OpenAI integrated it into ChatGPT, Google DeepMind uses it for Gemini agents, AWS built AgentCore around it, and development tools like Zed, Sourcegraph, Replit, and Codeium all support it. In just a few months, the community has built thousands of MCP servers. The protocol has become the de-facto standard for agent-to-tool communication.
+Anthropic announced MCP in November 2024 and donated it to the Linux Foundation's Agentic AI Foundation about a year later, in December 2025. The adoption has been swift: OpenAI integrated it into ChatGPT, Google DeepMind uses it for Gemini agents, AWS built AgentCore around it, and development tools like Zed, Sourcegraph, Replit, and Codeium all support it. In just a few months, the community has built thousands of MCP servers. The protocol has become the de-facto standard for agent-to-tool communication.
 
 If you've read my previous articles on AWS DevOps Agent, Security Agent, and Kiro, you've seen what these frontier agents do. This article explains how they actually work—the protocol layer that makes integration possible. More importantly, it shows how you can extend these agents to work with your proprietary systems.
 

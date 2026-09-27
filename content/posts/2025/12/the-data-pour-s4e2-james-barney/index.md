@@ -53,4 +53,4 @@ We also get into why copilots can feel underwhelming in enterprises: the public 
 This blog is just the background and the framing—if you want the full story (and the full vibe), watch the YouTube episode. It's a real conversation between two people who've been in the trenches, trying to describe what's actually happening in AI without turning it into marketing copy or doomposting.
 
 Link to the episode:
-https://youtu.be/ibtZckIQ_JI?si=XiD_CPVBWdinvugr
+https://youtu.be/ibtZckIQ_JI

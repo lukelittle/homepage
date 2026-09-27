@@ -4,7 +4,7 @@ date: 2025-10-20T09:00:00-05:00
 draft: false
 tags: ["AWS", "outage", "resilience", "DynamoDB", "DNS", "us-east-1", "architecture"]
 categories: ["engineering", "cloud"]
-description: "What happened during the October 20 AWS outage, how to communicate impact to leadership, and the critical questions every team should ask about their infrastructure resilience"
+description: "What happened in the October 20 AWS outage, how to explain the impact to leadership, and the resilience questions every team should ask."
 cover:
     image: "cover.png"
     alt: "Title card: Learning from the October 20 AWS Outage: Questions Every Team Should Ask"

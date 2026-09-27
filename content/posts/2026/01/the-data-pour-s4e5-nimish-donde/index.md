@@ -2,7 +2,7 @@
 title: "Data Pour with Nimish Donde: Resiliency, Data Gravity, and Building Cloud Platforms That Scale"
 date: 2026-01-16T09:00:00-05:00
 draft: false
-tags: ["data", "podcast", "cloud", "fintech", "resiliency", "AI", "banking", "charlotte"]
+tags: ["data", "podcast", "cloud", "fintech", "resilience", "AI", "banking", "charlotte"]
 categories: ["engineering"]
 description: "A conversation at Amélie's French bakery with Nimish Donde about cloud transformation in banking, why resiliency is a mindset, and how to unlock data for AI."
 cover:
@@ -59,7 +59,7 @@ Nimish's definition: **resiliency is a mindset, not a destination**.
 
 Gone are the days when you measured platform quality by uptime percentages. Resiliency today is about the *experiences* you build for customers. It's about how you respond under stress. It's about building systems that anticipate failure, learn from it, and continuously improve.
 
-He referenced the SRE evolution—Beno Ventures' famous line: "Hope is not a strategy." That philosophy shaped how Nimish approaches resiliency today.
+He referenced the SRE evolution and Google SRE's famous motto: "Hope is not a strategy." That philosophy shaped how Nimish approaches resiliency today.
 
 ### Chaos engineering as a first-class citizen
 
@@ -135,4 +135,4 @@ This blog is just the teaser. If you want the full story—including our takes o
 And if you're ever in Charlotte, grab a salted caramel brownie at Amélie's. Nimish has been a fan for 15 years. I'm partial to the pistachio macaron.
 
 Watch the full Data Pour episode here:  
-https://youtu.be/3xuco4R8EHE?si=QF5JkEeSglcnfG0n
+https://youtu.be/3xuco4R8EHE
