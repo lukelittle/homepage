@@ -22,8 +22,8 @@ This site is where I write about what I've learned, what I'm learning, and what 
 
 ## Invite me
 
-I enjoy speaking with students, meetups, and engineering teams about cloud careers, AWS architecture in regulated industries, and building with AI. If that sounds useful for your group, [grab 30 minutes on my calendar](https://calendly.com/lukelittle/30min) or [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
+I enjoy speaking with students, meetups, and engineering teams about cloud careers, AWS architecture in regulated industries, and building with AI. If that sounds useful for your group, [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/).
 
 ## Get in touch
 
-The best way to reach me is to [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/), or [book a 30-minute call](https://calendly.com/lukelittle/30min). My code is on [GitHub](https://github.com/lukelittle), and you can follow along via [RSS](/index.xml).
+The best way to reach me is to [bug me on LinkedIn](https://www.linkedin.com/in/lucaslittle/). My code is on [GitHub](https://github.com/lukelittle), and you can follow along via [RSS](/index.xml).
