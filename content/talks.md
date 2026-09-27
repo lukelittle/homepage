@@ -48,4 +48,4 @@ I hosted Season 4 of Ippon's The Data Pour: real conversations about cloud, data
 
 ## Community
 
-I'm active in the **Richmond AWS User Group**. Recent meetups include AI guardrails and governance (August 2026), [FastMCP on AWS]({{< relref "/posts/2026/02/richmond-aws-user-group-fastmcp" >}}) and [a session on Kiro]({{< relref "/posts/2026/03/richmond-aws-user-group-kiro" >}}).
+I'm the lead organizer of the **Richmond AWS User Group**. Recent meetups include AI guardrails and governance (August 2026), [FastMCP on AWS]({{< relref "/posts/2026/02/richmond-aws-user-group-fastmcp" >}}) and [a session on Kiro]({{< relref "/posts/2026/03/richmond-aws-user-group-kiro" >}}).
