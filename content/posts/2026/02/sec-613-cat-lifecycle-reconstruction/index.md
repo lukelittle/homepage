@@ -223,6 +223,7 @@ We use separate topics for different concerns:
 - **cat.linkages.v1**: Parent-child edges
 - **cat.lifecycle.v1**: Materialized lifecycle snapshots
 - **cat.exceptions.v1**: Data quality violations
+- **cat.late_events.v1**: Events that arrived after the watermark, for batch reconciliation
 - **audit.v1**: Immutable audit trail of corrections (created by `tools/create_topics.sh`, not written by the Spark job yet)
 
 ### Spark Structured Streaming
@@ -240,38 +241,48 @@ events = spark.readStream \
     .select("data.*") \
     .withColumn("event_time", (col("ts_event") / 1000).cast("timestamp"))
 
-# Watermark first, then deduplicate (idempotency) with bounded state
-watermarked = events.withWatermark("event_time", "30 seconds")
-unique_events = watermarked.dropDuplicatesWithinWatermark(["event_id"])
+# Watermark first, and tag events that arrived later than the watermark delay
+watermarked = events \
+    .withWatermark("event_time", "2 minutes") \
+    .withColumn("is_late",
+                col("kafka_timestamp") > col("event_time") + expr("INTERVAL 2 minutes"))
+
+# Deduplicate (idempotency) with bounded state
+unique_events = watermarked.dropDuplicates(["event_id", "event_time"])
 
 # Build linkages: a UDF returns an array of edges per event, then explode
 linkages = unique_events \
     .withColumn("edges", construct_edges(
-        col("event_type"), col("customer_order_id"), col("firm_order_id"),
-        col("parent_firm_order_id"), col("route_id"), col("exec_id"),
-        col("ts_event"))) \
+        col("event_id"), col("event_type"), col("customer_order_id"),
+        col("firm_order_id"), col("parent_firm_order_id"), col("route_id"),
+        col("exec_id"), col("ts_event"))) \
     .select(explode(col("edges")).alias("edge")) \
     .select("edge.*")
 
-# Materialize lifecycles: one row per customer order
+# Materialize lifecycles: one row per customer order per trading day
 lifecycles = unique_events \
-    .groupBy("customer_order_id") \
+    .groupBy(window(col("event_time"), "1 day"), col("customer_order_id")) \
     .agg(
-        _max(col("qty")).alias("total_qty"),
-        _sum(expr("CASE WHEN event_type = 'FILL' THEN qty ELSE 0 END")).alias("filled_qty"),
-        count(expr("CASE WHEN event_type = 'ROUTE' THEN 1 END")).alias("route_count"),
-        # ...status, avg exec price, first/last timestamps
+        _max(struct(col("ts_event"), col("event_type"))).alias("last_event"),
+        _max(expr("CASE WHEN event_type = 'NEW' THEN qty END")).alias("total_qty"),
+        _sum(expr("""CASE WHEN event_type = 'FILL' THEN qty
+                          WHEN event_type = 'BUST' THEN -qty
+                          ELSE 0 END""")).alias("filled_qty"),
+        # ...route/fill counts, status, avg exec price, first/last timestamps
     )
 
-# Validate data quality (filters on the lifecycle rows)
-exceptions = validate_lifecycles(lifecycles)
+# Each micro-batch of updated lifecycles is written to Kafka, and validated
+# for exceptions, inside foreachBatch
 ```
 
-Why the watermark comes before deduplication: a plain `dropDuplicates(["event_id"])` on a stream has to remember every `event_id` it has ever seen, forever, so its state grows without bound. `dropDuplicatesWithinWatermark` (Spark 3.5+) only remembers each ID until the watermark passes it, which is fine as long as retries show up within the watermark delay. On older Spark, the equivalent is `withWatermark(...)` followed by `dropDuplicates(["event_id", "event_time"])`. Including the event-time column is what lets Spark evict old keys, but it only catches duplicates that carry the same timestamp.
-<!-- TODO(Luke): repo has the same issue; fix in repo. deduplicate_events() does withWatermark("event_time", "1 hour").dropDuplicates(["event_id"]) with no event-time column in the keys, so dedup state is never evicted; apply_watermark() then calls withWatermark a second time. -->
+Why the watermark comes before deduplication: a plain `dropDuplicates(["event_id"])` on a stream has to remember every `event_id` it has ever seen, forever, so its state grows without bound. Adding the watermarked `event_time` column to the keys lets Spark evict each ID once the watermark passes it. A resent event carries the same `ts_event`, so it still matches. Spark 3.5 also has `dropDuplicatesWithinWatermark`, which is the more natural fit, but I hit a runtime crash with it once downstream steps pruned columns, so the repo sticks with the two-key version.
 
-One more thing to know about that `groupBy("customer_order_id")`: because the grouping key has no event-time column, Spark can't use the watermark to expire lifecycle state either, and it can't run that aggregation in `append` mode. The repo writes lifecycles in `update` mode, which works, but a production version would need to finalize and evict lifecycles (for example with `applyInPandasWithState` and a timeout).
-<!-- TODO(Luke): repo writes `exceptions` (derived from the streaming aggregation) to Kafka in append mode, which Spark rejects for an aggregation without an event-time key; switch that query to update mode or restructure -->
+A few other details that are easy to get wrong:
+
+- **Group by trading day, too.** If lifecycles are grouped by `customer_order_id` alone, there's no event-time key, so Spark can never expire that state. Adding a one-day window lets the watermark close out each trading day. (Orders that live across days, like good-till-canceled orders, would need `applyInPandasWithState` with a timeout instead.)
+- **Pick the last event by time.** `max(struct(event_type, ts_event))` compares the event type first, so it returns the alphabetically largest type, not the latest event. Put the timestamp first.
+- **Take quantity from the NEW event.** Using `max(qty)` across all events hides overfills, because an oversized fill just becomes the new "total."
+- **Validate inside `foreachBatch`.** Exceptions are derived from an aggregation, and Spark won't emit that in append mode. Writing lifecycles in update mode and validating each micro-batch inside `foreachBatch` sidesteps the problem.
 
 ## Handling Late and Out-of-Order Events
 
@@ -302,14 +313,14 @@ Events with event_time < 10:04:30 are "late"
 Here's the catch: once an event is behind the watermark, Spark's stateful operators (deduplication, windowed aggregations) drop it. The streaming job won't reconcile it for you. Late events past the watermark need their own path.
 
 The approach I'd take:
-1. **Detect**: Before the stateful operators, tag events whose event time is older than processing time minus the watermark delay. That's an approximation of Spark's watermark, and it's what the repo's `is_late` column does.
-2. **Route**: Write those events to a separate late-events sink (a `cat.late_events.v1` topic or an S3 prefix) instead of relying on the streaming aggregation.
+1. **Detect**: Before the stateful operators, tag events that reached Kafka more than the watermark delay after they happened. That's an approximation of Spark's watermark, and it's what the repo's `is_late` column does.
+2. **Route**: Write those events to a separate late-events sink instead of relying on the streaming aggregation. The repo sends them to `cat.late_events.v1`.
 3. **Recompute**: A batch reconciliation job replays the full event log for each affected `customer_order_id`, including the late events. The raw topic keeps 30 days of events, so the history is there.
 4. **Audit**: Log the correction to `audit.v1`.
 5. **Update**: Emit a corrected lifecycle snapshot.
 
 The streaming path gives you fast, provisional lifecycles, and the batch path makes them correct. Real CAT reporting has a similar rhythm: data is due by 8:00 a.m. ET on the trading day after the event, and errors get corrected afterward.
-<!-- TODO(Luke): repo only tags is_late / is_provisional; the late-events topic and batch reconciliation job aren't implemented yet -->
+The repo implements steps 1 and 2. Steps 3 through 5 are a good exercise.
 <!-- TODO(Luke): verify error-correction deadline (T+3 by 8:00 a.m. ET) in the current CAT NMS Plan / Industry Member specs if you want to add it here -->
 
 ## Data Quality Validation
@@ -351,27 +362,34 @@ Exceptions are written to `cat.exceptions.v1` for investigation.
 
 ### Local Quickstart
 
+All you need is Docker. Kafka, Spark, and the event generator run in containers.
+
 ```bash
 # Clone the repository
 git clone https://github.com/lukelittle/sec-613-cat-lifecycle-reconstruction-example
 cd sec-613-cat-lifecycle-reconstruction-example
 
-# Start local environment
-cd local
-docker-compose up -d
+# Start Kafka, Kafka UI, and Spark, then create topics
+make local-up
+make local-topics
 
-# Create topics
-../tools/create_topics.sh
+# Run the streaming job (leave it running)
+make local-spark
 
-# Run Spark job
-cd ../spark/lifecycle_job
-spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
-  lifecycle_streaming.py
+# In another terminal, generate events
+make local-generate                          # normal
+make local-generate MODE=duplicate           # resend some events
+make local-generate MODE=late DURATION=300   # hold some events past the watermark
 
-# Generate events
-cd ../../services/event_generator
-python generator.py --mode normal
+# Watch the results
+./tools/tail_topics.sh cat.lifecycle.v1
+./tools/tail_topics.sh cat.late_events.v1
+
+# Run the tests
+make test
 ```
+
+In duplicate mode you should see zero overfill exceptions, because dedup catches the resent fills. In late mode, held-back ACKs show up on `cat.late_events.v1` instead of silently disappearing.
 
 ### AWS Deployment
 
