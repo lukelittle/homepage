@@ -6,8 +6,16 @@ tags: ["AWS", "Resilience", "Resilience Hub", "Financial Services", "Multi-Accou
 categories: ["engineering"]
 description: "Most resilience programs fail because they never move beyond isolated assessments. Here's how to scale AWS Resilience Hub across accounts and build a real program."
 cover:
-    image: "hero.png"
-    alt: "Scaling Resilience with AWS Resilience Hub"
+    image: "cover.png"
+    alt: "Title card: Scaling Resilience with AWS Resilience Hub: A Multi-Account Reality Check"
+    relative: true
+hero:
+    style: "card"
+    color: "cloud"
+    label: "AWS Resilience"
+    title: "Scaling Resilience with AWS Resilience Hub"
+    ghost: "multi-account"
+    chip: "AWS Resilience Hub"
 ---
 
 Everyone in financial services talks about resilience. We have DR plans, architecture diagrams, dashboards, and increasingly, tools like AWS Resilience Hub. On paper, it all looks good. In practice, most resilience programs don't fail because of missing tooling — they fail because they never move beyond isolated assessments.
