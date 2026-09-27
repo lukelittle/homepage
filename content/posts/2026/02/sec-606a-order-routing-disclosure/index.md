@@ -64,7 +64,7 @@ Rule 606 has other parts. Rule 606(b)(1) requires brokers to tell a customer, on
 
 <!-- TODO(Luke): the 5310 post is still a draft; make sure it's published (or drop the link) before publishing this one. -->
 
-It's easy to confuse 606(a) with best execution, which is covered by FINRA Rule 5310 (which I wrote about [earlier in this series](/posts/2026/02/finra-5310-best-execution-monitor/)). They're related but they answer different questions:
+It's easy to confuse 606(a) with best execution, which is covered by FINRA Rule 5310 (which I wrote about [earlier in this series]({{< relref "/posts/2026/02/finra-5310-best-execution-monitor" >}})). They're related but they answer different questions:
 
 | | Rule 606(a) | FINRA Rule 5310 |
 |---|---|---|
