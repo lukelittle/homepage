@@ -488,3 +488,37 @@ button:hover {
     padding: 0;
     color: var(--primary);
 }
+
+/* About page photo: floats beside the intro on wide screens, stacks on phones */
+.about-photo {
+    float: right;
+    width: 38%;
+    max-width: 280px;
+    margin: 0.25em 0 1em 1.75em;
+}
+
+.about-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.about-photo figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--secondary);
+    margin-top: 0.4em;
+}
+
+@media (max-width: 600px) {
+    .about-photo {
+        float: none;
+        width: 70%;
+        margin: 0 auto 1.5em;
+    }
+}
+
+.post-content h2 {
+    clear: both;
+}
