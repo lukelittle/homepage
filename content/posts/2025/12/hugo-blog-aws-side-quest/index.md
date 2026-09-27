@@ -8,6 +8,7 @@ description: "I tried to launch a Hugo site on AWS and ended up doing four hours
 cover:
     image: "hugo-blog-aws-side-quest.png"
     alt: "Hugo Blog AWS Architecture Diagram"
+    relative: true
 ---
 
 Recently I came across another engineer's personal blog — clean layout, good typography, that "I actually finish my side projects" energy — and it pushed me to finally build one of my own.

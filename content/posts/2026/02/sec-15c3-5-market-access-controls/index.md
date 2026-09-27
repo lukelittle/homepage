@@ -10,8 +10,16 @@ description: "How to implement real-time trading risk controls using Apache Kafk
 aliases:
   - /posts/2026/02/streaming-risk-controls-kafka-spark/
 cover:
-    image: "designing-pre-trade-risk-controls-on-aws.png"
-    alt: "Architecture diagram showing pre-trade risk controls on AWS"
+    image: "cover.png"
+    alt: "Title card: Designing Pre-Trade Risk Controls on AWS (SEC Rule 15c3-5)"
+    relative: true
+hero:
+    style: "card"
+    color: "reg"
+    label: "Regulated Markets on AWS"
+    title: "Designing Pre-Trade Risk Controls on AWS"
+    ghost: "15c3-5"
+    chip: "SEC Rule 15c3-5"
 ---
 
 ## Introduction
@@ -199,6 +207,8 @@ These settings ensure kill state updates propagate quickly while maintaining the
 ## Demo Architecture Walkthrough
 
 Our demo implements these patterns using serverless AWS services:
+
+![Architecture diagram showing pre-trade risk controls on AWS](designing-pre-trade-risk-controls-on-aws.png)
 
 
 **Key architectural decisions mapped to regulatory requirements:**

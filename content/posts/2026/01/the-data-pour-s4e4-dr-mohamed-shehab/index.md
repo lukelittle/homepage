@@ -8,6 +8,7 @@ description: "A conversation at UNC Charlotte's PORTAL about why students love h
 cover:
     image: "the-data-pour-s4e4-dr-mohamed-shehab.png"
     alt: "Data Pour Season 4 Episode 4 with Dr. Mohamed Shehab"
+    relative: true
 ---
 
 For this episode, I visited the PORTAL building at UNC Charlotte to sit down with Dr. Mohamed Shehab—a professor whose mobile development course keeps showing up in conversations with students as one of the most impactful experiences of their degree.

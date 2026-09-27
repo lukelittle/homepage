@@ -8,6 +8,7 @@ description: "A conversation with James Barney at People's Market in Myers Park,
 cover:
     image: "the-data-pour-s4e2-james-barney.png"
     alt: "Data Pour Season 4 Episode 2 with James Barney"
+    relative: true
 ---
 
 We filmed this episode of Data Pour at People's Market in Myers Park, Charlotte—grabbed drinks, hit record, and got into the kind of conversation that happens when two people who grew up in "big data" start comparing notes on where AI is actually headed.

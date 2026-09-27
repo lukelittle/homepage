@@ -8,6 +8,7 @@ description: "What happened during the October 20 AWS outage, how to communicate
 cover:
     image: "explaining-october-20-aws-outage.png"
     alt: "Learning from the October 20 AWS Outage"
+    relative: true
 ---
 
 On the morning of October 20, AWS us-east-1 services were degraded—in particular, DNS services for DynamoDB. Most of us didn't find out from monitoring alerts or dashboards. We found out because the apps on our phones stopped working.

@@ -6,8 +6,15 @@ tags: ["MBA", "career", "education", "leadership"]
 categories: ["career"]
 description: "Reflections on finishing my first semester of the MBA at Duke's Fuqua School of Business: what surprised me, what I'm learning, and why an engineer went back to school."
 cover:
-    image: "hero.jpg"
+    image: "cover.jpg"
     alt: "Luke Little's Duke MBA Class of 2028 cohort on the steps at Fuqua"
+    relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "Duke MBA · Class of 2028"
+    title: "One semester into my Duke MBA"
+    photo: "photo.jpg"
 ---
 
 <!--
@@ -22,7 +29,7 @@ A lot of people asked me the same question when I told them I was starting an MB
 
 <!-- TODO(Luke): your real answer. The Cracking the Cloud post hints at it: the hardest problems aren't only technical anymore; they're about strategy, governance, and leading people through change. -->
 
-![My Duke MBA Class of 2028 cohort](hero.jpg)
+![My Duke MBA Class of 2028 cohort](photo.jpg)
 
 ## What the First Semester Was Actually Like
 

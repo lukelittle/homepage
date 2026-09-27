@@ -5,6 +5,7 @@ draft: false
 cover:
     image: "aws-bedrock-guardrails-architecture.png"
     alt: "AWS Bedrock Guardrails Architecture"
+    relative: true
 ---
 
 Everyone wants to ship AI into production. Almost no one wants to own what happens when it goes wrong.

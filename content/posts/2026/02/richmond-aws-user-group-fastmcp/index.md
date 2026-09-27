@@ -7,6 +7,7 @@ cover:
     image: "richmond-aws-user-group-fastmcp-demo.jpeg"
     alt: "Richmond AWS User Group - FastMCP Demo"
     caption: "Richmond AWS User Group: FastMCP Demo on AWS"
+    relative: true
 ---
 
 ## Live Demonstration of FastMCP on AWS

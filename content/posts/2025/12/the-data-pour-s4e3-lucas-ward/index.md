@@ -8,6 +8,7 @@ description: "A conversation with Lucas Ward at Charlotte Beer Garden about lead
 cover:
     image: "the-data-pour-s4e3-lucas-ward.png"
     alt: "Data Pour Season 4 Episode 3 with Lucas Ward"
+    relative: true
 ---
 
 For this episode of Data Pour, I sat down with Lucas Ward—one of my SWE managers and a senior technical manager at Ippon—to talk about what it actually looks like to lead people in a consulting practice while the industry is shifting under our feet.

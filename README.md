@@ -23,6 +23,32 @@ git push
 
 GitHub Actions handles the rest (build → upload to S3 → invalidate CloudFront).
 
+### Cover images
+
+Covers are generated from a `hero:` block in the post's front matter
+(title cards for technical posts, comic-framed photos for talks and events):
+
+```yaml
+cover:
+    image: "cover.png"      # cover.jpg for photo style
+    alt: "..."
+    relative: true          # needed so link previews find the image
+hero:
+    style: "card"           # or "photo" (then add photo: "photo.jpg")
+    color: "reg"            # reg | ai | talk
+    label: "Regulated Markets on AWS"
+    ghost: "15c3-5"
+    chip: "SEC Rule 15c3-5"
+```
+
+```bash
+python3 scripts/make_cover.py content/posts/2026/02/my-post/index.md
+python3 scripts/make_cover.py --all
+```
+
+Needs Pillow and PyYAML (`pip install pillow pyyaml`). Fonts are in
+`scripts/fonts/` (Bangers, Instrument Sans, JetBrains Mono; all SIL Open Font License).
+
 ### Running locally
 
 ```bash

@@ -6,8 +6,16 @@ tags: ["AWS", "AI", "Bedrock", "Security", "Compliance", "governance", "Enterpri
 categories: ["engineering"]
 description: "Notes from my Richmond AWS User Group presentation on AI guardrails and how I approach designing governance strategies for AI in regulated industries."
 cover:
-    image: "hero.png"
-    alt: "Luke Little presenting on AI guardrails and governance at the Richmond AWS User Group"
+    image: "cover.png"
+    alt: "Title card: AI Guardrails and Governance for Regulated Industries, a Richmond AWS User Group talk"
+    relative: true
+hero:
+    style: "card"
+    color: "talk"
+    label: "Talk · Richmond AWS User Group"
+    title: "AI Guardrails and Governance for Regulated Industries"
+    ghost: "Guardrails"
+    chip: "Aug 2026"
 ---
 
 On August 13th I presented at the Richmond AWS User Group on AI guardrails, focused on how I approach designing governance strategies for AI in regulated industries. This is a topic I spend a lot of my time on, and it was good to step back from the day-to-day and talk through the patterns that keep coming up.

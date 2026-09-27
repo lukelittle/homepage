@@ -10,8 +10,16 @@ description: "How to build a deterministic, reproducible quarterly batch pipelin
 aliases:
   - /posts/2026/02/building-a-batch-processing-system-for-sec-rule-606a-order-routing-disclosure/
 cover:
-    image: "sec-606a-order-routing-disclosure.png"
-    alt: "Architecture diagram showing a quarterly batch pipeline on AWS for SEC Rule 606(a) order routing reports"
+    image: "cover.png"
+    alt: "Title card: Deterministic Order Routing Disclosure Reporting (SEC Rule 606(a))"
+    relative: true
+hero:
+    style: "card"
+    color: "reg"
+    label: "Regulated Markets on AWS"
+    title: "Deterministic Order Routing Disclosure Reporting"
+    ghost: "606(a)"
+    chip: "SEC Rule 606(a)"
 ---
 
 <!-- TODO(Luke): repo still uses pre-2018 categories; update repo -->

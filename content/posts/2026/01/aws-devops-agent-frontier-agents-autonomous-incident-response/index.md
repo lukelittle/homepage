@@ -8,6 +8,7 @@ description: "How AWS's frontier agents are changing incident response forever -
 cover:
     image: "aws-devops-agent-frontier-agents-autonomous-incident-response.png"
     alt: "Your AI On-Call Engineer: Inside AWS DevOps Agent"
+    relative: true
 ---
 
 At re:Invent 2024, AWS CEO Matt Garman announced something that made me stop and actually pay attention during a keynote—which doesn't happen often.

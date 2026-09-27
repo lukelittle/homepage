@@ -7,6 +7,7 @@ cover:
     image: "richmond-aws-user-group-kiro-presentation.jpg"
     alt: "Richmond AWS User Group Meetup featuring Kiro"
     caption: "Richmond AWS User Group Presentation on Kiro"
+    relative: true
 ---
 
 ## Richmond AWS User Group: An Evening of AI-Powered Development

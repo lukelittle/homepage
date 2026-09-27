@@ -8,6 +8,7 @@ description: "The October 20 DNS failures broke DynamoDB applications that shoul
 cover:
     image: "surviving-dns-failures-dynamodb-multi-region.png"
     alt: "Surviving DNS Failures with Multi-Region DynamoDB"
+    relative: true
 ---
 
 On October 20, 2025, DNS resolution failed in AWS us-east-1, and with it, a lot of DynamoDB applications went down.

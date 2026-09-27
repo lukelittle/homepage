@@ -8,6 +8,7 @@ description: "My take on AWS re:Invent 2025 keynotes—AWS is democratizing AI t
 cover:
     image: "takeaways-from-aws-reinvent-keynotes-2025.png"
     alt: "AWS re:Invent 2025 - Keep Inventing"
+    relative: true
 ---
 
 AWS re:Invent 2025 keynotes felt like AWS repeating the same move they pulled 15 years ago—democratizing something that used to be gated behind massive budgets and specialized teams. This time it's AI.

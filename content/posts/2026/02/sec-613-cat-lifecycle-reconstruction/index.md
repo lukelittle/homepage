@@ -10,8 +10,16 @@ description: "Learn how to reconstruct complete order lifecycles across distribu
 aliases:
   - /posts/2026/02/consolidated-audit-trail-event-sourcing/
 cover:
-    image: "consolidated-audit-trail-event-sourcing.png"
-    alt: "Architecture diagram showing order lifecycle reconstruction with event sourcing"
+    image: "cover.png"
+    alt: "Title card: Event-Sourced Order Lifecycle Reconstruction (SEC Rule 613 and CAT)"
+    relative: true
+hero:
+    style: "card"
+    color: "reg"
+    label: "Regulated Markets on AWS"
+    title: "Event-Sourced Order Lifecycle Reconstruction"
+    ghost: "613"
+    chip: "SEC Rule 613 · CAT"
 ---
 
 ## Introduction

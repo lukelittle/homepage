@@ -8,6 +8,7 @@ description: "How we added secure user authentication to our serverless survey a
 cover:
     image: "adding-cognito-to-our-survey-app.png"
     alt: "Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App"
+    relative: true
 ---
 
 # Enhancing Security: Adding AWS Cognito Authentication to Your Serverless App

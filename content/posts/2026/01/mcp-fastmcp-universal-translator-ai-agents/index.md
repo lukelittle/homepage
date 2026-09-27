@@ -8,6 +8,7 @@ description: "Building AI agent integrations with FastMCP and the Model Context 
 cover:
     image: "vinyl-chatbot-architecture.png"
     alt: "Architecture Diagram: FastMCP Vinyl Collection Chatbot on AWS"
+    relative: true
 ---
 
 

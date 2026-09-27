@@ -8,6 +8,7 @@ description: "My first appearance on The Data Pour, filmed at Wooden Robot Brewe
 cover:
     image: "the-data-pour-s4e1-luke-little.png"
     alt: "Data Pour Season 4 Episode 1 with Luke Little"
+    relative: true
 ---
 
 I recently stepped into the role of host for Ippon's Data Pour series, but before I officially took over, our CTO, Andy Lamora, sat me down at Wooden Robot Brewery in Charlotte and interviewed me on camera. It was a great atmosphere — good beer, good weather — and then a handful of cameras appeared, all pointed directly at me. I'm still getting used to public speaking, so the entire setup felt a little awkward. Beer helps, but only so much.

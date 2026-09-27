@@ -6,8 +6,15 @@ tags: ["AWS", "AI", "education", "career", "cloud", "students", "UNCC"]
 categories: ["education"]
 description: "I built Cracking the Cloud around the state of AI in 2025. A year later the conversation went from 'AI is taking the jobs' to 'AI is going to kill us all.' Here's what I told UNC Charlotte students instead."
 cover:
-    image: "hero.jpg"
+    image: "cover.jpg"
     alt: "Luke Little presenting Cracking the Cloud to a room of computing students at UNC Charlotte"
+    relative: true
+hero:
+    style: "photo"
+    color: "talk"
+    label: "Talk · UNC Charlotte · Sep 2026"
+    title: "Cracking the Cloud, post-Hugging Face"
+    photo: "photo.jpg"
 ---
 
 <!--

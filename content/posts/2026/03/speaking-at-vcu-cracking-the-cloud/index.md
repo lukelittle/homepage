@@ -7,6 +7,7 @@ cover:
     image: "speaking-at-vcu-cracking-the-cloud-and-the-evolution-of-aws-learning.jpg"
     alt: "Speaking at Virginia Commonwealth University about AWS"
     caption: "Speaking at VCU: Cracking the Cloud and the Evolution of AWS Learning"
+    relative: true
 ---
 
 I had the privilege of speaking at the Department of Computer Science at Virginia Commonwealth University's College of Engineering on March 3rd, presenting "Cracking the Cloud: How AWS Certifications Can Launch Your Career" to a group of engaged Computer Science seniors.

@@ -8,6 +8,7 @@ description: "Creating a small survey app to teach the cloud and explain its pow
 cover:
     image: "pokemon-surveys-and-cloud-infrastructure.png"
     alt: "Pokémon Surveys and Cloud Infrastructure"
+    relative: true
 ---
 
 Back in November, I was preparing for the Cracking the Cloud presentation at UNC Charlotte. I needed a way to explain how the cloud fundamentally changed what's possible on the internet—not through abstract concepts, but through something students could immediately relate to.

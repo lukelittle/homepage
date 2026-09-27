@@ -8,6 +8,7 @@ description: "How students can leverage cloud platforms to gain real experience 
 cover:
     image: "cracking-the-cloud.png"
     alt: "Cracking the Cloud - UNC Charlotte"
+    relative: true
 ---
 
 I was invited to speak at UNC Charlotte recently to the computer science programs, and I approached the session, Cracking the Cloud, with a very specific goal: to give students a realistic, actionable way to stand out in a job market that's becoming more competitive every year. Companies are slowing early-career hiring. AI is reshaping workflows. Expectations for junior talent are rising, not shrinking. Students can sense this shift, but many don't know what to do with that reality. That's where the conversation begins.

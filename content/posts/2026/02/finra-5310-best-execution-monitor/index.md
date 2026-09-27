@@ -10,8 +10,16 @@ description: "What FINRA Rule 5310 actually requires, how NBBO and execution qua
 aliases:
   - /posts/2026/02/real-time-best-execution-finra-5310/
 cover:
-    image: "real-time-best-execution-finra-5310.png"
-    alt: "Architecture diagram showing real-time best execution measurement system"
+    image: "cover.png"
+    alt: "Title card: Measuring Best Execution in Real Time (FINRA Rule 5310)"
+    relative: true
+hero:
+    style: "card"
+    color: "reg"
+    label: "Regulated Markets on AWS"
+    title: "Measuring Best Execution in Real Time"
+    ghost: "5310"
+    chip: "FINRA Rule 5310"
 ---
 
 ## Introduction

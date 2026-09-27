@@ -8,6 +8,7 @@ description: "How to architect production-grade generative AI systems that meet 
 cover:
     image: "genai-reference-architecture.png"
     alt: "Reference Architecture for Safe Generative AI on AWS for Regulated Environments"
+    relative: true
 ---
 
 ## The Real Problem: Production, Not Prototypes

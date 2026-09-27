@@ -8,6 +8,7 @@ description: "How to build a professional online presence in 10 minutes using th
 cover:
     image: "building-your-personal-brand-student-guide.png"
     alt: "Student Branding Starter - Sample Portfolio Website"
+    relative: true
 ---
 
 What does your online presence say about you?

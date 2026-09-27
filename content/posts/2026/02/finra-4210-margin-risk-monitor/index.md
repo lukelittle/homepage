@@ -10,8 +10,16 @@ description: "Building an event-driven margin and stress monitor with Kafka and 
 aliases:
   - /posts/2026/02/real-time-margin-risk-finra-4210/
 cover:
-    image: "real-time-margin-risk-finra-4210.png"
-    alt: "Architecture diagram showing real-time margin risk monitoring system"
+    image: "cover.png"
+    alt: "Title card: Real-Time Margin and Stress Monitoring (FINRA Rule 4210)"
+    relative: true
+hero:
+    style: "card"
+    color: "reg"
+    label: "Regulated Markets on AWS"
+    title: "Real-Time Margin and Stress Monitoring"
+    ghost: "4210"
+    chip: "FINRA Rule 4210"
 ---
 
 ## Introduction
@@ -252,6 +260,8 @@ What this architecture gives you:
 - **Replayability**: inputs live in Kafka, so a sweep can be rerun against the same data to explain or test a decision
 
 ### System Design
+
+![Architecture diagram showing the real-time margin risk monitoring system](real-time-margin-risk-finra-4210.png)
 
 ```
 Fills, Prices, Betas → Kafka → Spark sweep (every 15s) → margin.calc / stress → Enforcement → Kafka + audit
