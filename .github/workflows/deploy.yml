@@ -79,6 +79,14 @@ jobs:
             --cache-control "public, max-age=300" \
             --content-type "application/xml; charset=utf-8"
 
+          # Domain verification files (Bluesky handle, Discord) have no extension;
+          # serve them as plain text rather than binary
+          aws s3 cp public/.well-known/ "s3://$BUCKET/.well-known/" \
+            --recursive \
+            --exclude ".gitkeep" \
+            --cache-control "public, max-age=300" \
+            --content-type "text/plain; charset=utf-8"
+
       - name: Invalidate CloudFront cache
         if: github.event_name != 'pull_request'
         run: |
