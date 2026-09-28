@@ -178,9 +178,11 @@ resource "aws_cloudfront_response_headers_policy" "security" {
   comment = "Security headers for ${var.domain_name}"
 
   security_headers_config {
+    # Main site only: calendar/drive/mail.lukelittle.com are Google Workspace
+    # shortcuts that only work over HTTP, so subdomains must stay excluded
     strict_transport_security {
       access_control_max_age_sec = 31536000
-      include_subdomains         = true
+      include_subdomains         = false
       preload                    = false
       override                   = true
     }
