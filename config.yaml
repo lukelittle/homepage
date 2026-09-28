@@ -22,18 +22,9 @@ params:
     Title: "Hi, I'm Luke 👋"
     Avatar: "/images/avatar.png"
     Content: >
-      I'm Head of Intelligent Data and Cloud at Ippon Technologies. I build cloud and AI systems for banking and capital markets, and help engineers and students level up.
-      I lead the Richmond AWS User Group and I'm working on my MBA at Duke. I write about **[regulated systems on AWS](/series/regulated-markets-on-aws/)**, **[applied AI and agents](/tags/ai/)**,
-      **[teaching the next generation of builders](/tags/education/)**, and the **[talks and podcasts](/talks/)** I get to be part of.
-  
-  # Social icons
-  socialIcons:
-    - name: "linkedin"
-      url: "https://www.linkedin.com/in/lucaslittle/"
-    - name: "github"
-      url: "https://github.com/lukelittle"
-    - name: "rss"
-      url: "/index.xml"
+      Head of Intelligent Data and Cloud at Ippon Technologies. I build cloud and AI systems
+      for banking and capital markets, and I lead the Richmond AWS User Group.
+      [More about me](/about/)
 
   # Link-preview image for pages without their own cover (homepage, About, Talks...)
   images:
@@ -102,21 +93,26 @@ menu:
     - name: Posts
       url: /archives/
       weight: 10
-    - name: Series
-      url: /series/
-      weight: 20
     - name: Talks
       url: /talks/
-      weight: 30
-    - name: Projects
-      url: /projects/
-      weight: 40
-    - name: Now
-      url: /now/
-      weight: 50
+      weight: 20
     - name: About
       url: /about/
-      weight: 60
+      weight: 30
     - name: Search
       url: /search/
-      weight: 70
+      weight: 40
+  # Secondary links, shown in the footer
+  footer:
+    - name: Series
+      url: /series/
+      weight: 10
+    - name: Projects
+      url: /projects/
+      weight: 20
+    - name: Now
+      url: /now/
+      weight: 30
+    - name: RSS
+      url: /index.xml
+      weight: 40

@@ -18,7 +18,14 @@
     --accent-teal: #0f766e;
     --accent-teal-hover: #115e59;
 
+    /* Topic colors, matching the covers (darker in light mode for contrast) */
+    --topic-reg: #0f766e;
+    --topic-ai: #b45309;
+    --topic-cloud: #0369a1;
+    --topic-talk: #6d28d9;
+
     /* Typography */
+    --font-display: 'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --font-code: 'Fira Code', 'Monaco', 'Courier New', monospace;
 
@@ -43,6 +50,11 @@
 
     --accent-teal: #2dd4bf;     /* Links */
     --accent-teal-hover: #5eead4;
+
+    --topic-reg: #2dd4bf;
+    --topic-ai: #fbbf24;
+    --topic-cloud: #38bdf8;
+    --topic-talk: #a78bfa;
 }
 
 /* Base typography */
@@ -84,7 +96,7 @@ body {
 
 /* Typography - Headings */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-main);
+    font-family: var(--font-display);
     color: var(--primary);
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -511,7 +523,7 @@ hr {
     clear: both;
 }
 
-/* Homepage "Start here" picks */
+/* Homepage "Start here" section */
 .start-here {
     margin-bottom: 32px;
 }
@@ -519,31 +531,6 @@ hr {
 .start-here h2 {
     font-size: 1.1em;
     margin-bottom: 0.6em;
-}
-
-.start-here ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 12px;
-}
-
-.start-here li {
-    display: grid;
-    gap: 2px;
-    padding-left: 14px;
-    border-left: 3px solid var(--accent-teal);
-}
-
-.start-here li a {
-    font-weight: 600;
-}
-
-.start-here li span {
-    color: var(--secondary);
-    font-size: 0.9em;
-    line-height: 1.5;
 }
 
 /* Closing call to action on posts */
@@ -621,4 +608,98 @@ hr {
    loading); height:auto keeps the aspect ratio when max-width shrinks them */
 .post-content img {
     height: auto;
+}
+
+/* Headings, titles, and the site name use the display face */
+.post-title,
+.page-header h1,
+.entry-header h2,
+.archive-entry-title,
+.home-info h1,
+.logo a,
+.start-here-title {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+}
+
+/* List pages use the page background in light mode too (PaperMod tints them) */
+.list {
+    background: var(--theme);
+}
+
+/* Topic label and stripe on post cards and archive entries */
+.topic-reg { --topic: var(--topic-reg); }
+.topic-ai { --topic: var(--topic-ai); }
+.topic-cloud { --topic: var(--topic-cloud); }
+.topic-talk { --topic: var(--topic-talk); }
+
+.topic-card {
+    border-left: 3px solid var(--topic);
+}
+
+.topic {
+    display: inline-block;
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--topic);
+    margin-bottom: 0.35em;
+}
+
+.archive-entry.topic-card {
+    padding-left: 14px;
+}
+
+/* "Start here" as cover thumbnails */
+.start-here-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.start-here-card {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    color: var(--primary);
+}
+
+.start-here-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s ease;
+}
+
+.start-here-card:hover img {
+    border-color: var(--accent-teal);
+}
+
+.start-here-title {
+    font-weight: 600;
+    font-size: 0.95em;
+    line-height: 1.35;
+}
+
+.start-here-card:hover .start-here-title {
+    color: var(--accent-teal);
+}
+
+@media (max-width: 560px) {
+    .start-here-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Footer links (Series, Projects, Now, RSS) */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 18px;
+    margin-bottom: 0.75em;
+    font-size: 0.95em;
 }

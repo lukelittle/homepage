@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Generate a post's cover image from the `hero:` block in its front matter.
 
-One template, two variants, in the site's own fonts (Inter + Fira Code):
+One template, two variants, in the site's own fonts (IBM Plex Sans titles,
+Fira Code labels):
 
   card   Slate background with a faint grid and a ghosted detail (like a
          rule number). For technical posts.
@@ -58,8 +59,9 @@ def font(name, size, variation=None):
     return f
 
 
-def inter(size, weight="Bold"):
-    return font("Inter-opsz-wght.ttf", size, weight)
+def plex(size, weight="Bold"):
+    """IBM Plex Sans: the site's heading face, used for cover titles."""
+    return font("IBMPlexSans-wdth-wght.ttf", size, weight)
 
 
 def fira(size, weight="SemiBold"):
@@ -193,7 +195,7 @@ def render(hero, title, photo_path=None):
     spaced(d, (left, 58 * k), hero.get("label", "").upper(), fira(19 * k), color, 2.5 * k)
 
     sizes = tuple(v * k for v in (70, 64, 58, 54, 50))
-    fnt, lines, size = fit_title(d, title, inter, sizes, text_w, 3,
+    fnt, lines, size = fit_title(d, title, plex, sizes, text_w, 3,
                                  two_line_sizes=tuple(v * k for v in (70, 64, 58)))
     line_h = int(size * 1.1)
     top = 100 * k + (h - 220 * k - line_h * len(lines)) // 2

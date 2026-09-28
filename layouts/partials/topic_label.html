@@ -1,0 +1,5 @@
+{{- /* Topic label from the post's cover color (hero.color), shared with the covers */ -}}
+{{- $names := dict "reg" "Regulated Markets" "ai" "Applied AI" "cloud" "AWS & Cloud" "talk" "Talks & Community" }}
+{{- with .Params.hero }}{{ with .color }}{{ with index $names . }}
+<span class="topic topic-{{ $.Params.hero.color }}">{{ . }}</span>
+{{- end }}{{ end }}{{ end }}

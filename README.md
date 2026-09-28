@@ -50,7 +50,7 @@ python3 scripts/make_cover.py --all
 ```
 
 Needs Pillow and PyYAML (`pip install pillow pyyaml`). Fonts are in
-`scripts/fonts/` (Inter and Fira Code, SIL Open Font License).
+`scripts/fonts/` (IBM Plex Sans and Fira Code, SIL Open Font License).
 
 ### Running locally
 

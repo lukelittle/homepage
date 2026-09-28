@@ -21,13 +21,19 @@
 {{- with site.Params.homeFeatured }}
 <section class="start-here" aria-labelledby="start-here-title">
     <h2 id="start-here-title">Start here</h2>
-    <ul>
+    <div class="start-here-grid">
         {{- range . }}
         {{- with site.GetPage . }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a><span>{{ .Description | default .Summary | plainify | truncate 110 }}</span></li>
+        <a class="start-here-card" href="{{ .RelPermalink }}">
+            {{- with .Resources.GetMatch "cover.*" }}
+            {{- $thumb := .Resize "720x webp q82" }}
+            <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="" loading="lazy" decoding="async">
+            {{- end }}
+            <span class="start-here-title">{{ .Title }}</span>
+        </a>
         {{- end }}
         {{- end }}
-    </ul>
+    </div>
 </section>
 {{- end }}
 {{- end -}}

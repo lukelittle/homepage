@@ -6,6 +6,11 @@
         <span>Made with <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> and <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer">AWS</a></span>
     </div>
     
+    <nav class="footer-links" aria-label="More">
+        {{- range site.Menus.footer }}
+        <a href="{{ .URL | absLangURL }}">{{ .Name }}</a>
+        {{- end }}
+    </nav>
     {{- /* Icons come from params.socialIcons in config.yaml */}}
     {{ partial "social_icons.html" (dict "align" "center") }}
 </footer>
