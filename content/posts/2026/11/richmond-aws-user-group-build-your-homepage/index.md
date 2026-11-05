@@ -1,7 +1,7 @@
 ---
 title: "Your Homepage Is More Than a Resume"
 description: "At the November Richmond AWS User Group I walked through how I built lukelittle.com with Hugo on AWS, and how you can build yours."
-date: 2026-11-05T19:00:00-05:00
+date: 2026-11-05T18:00:00-05:00
 draft: false
 tags: ["AWS", "Hugo", "personal site", "AWS User Group", "Richmond", "S3", "CloudFront", "Terraform"]
 cover:
