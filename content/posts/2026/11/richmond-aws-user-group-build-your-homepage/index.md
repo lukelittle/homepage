@@ -2,7 +2,7 @@
 title: "Your Homepage Is More Than a Resume"
 description: "At the November Richmond AWS User Group I walked through how I built lukelittle.com with Hugo on AWS, and how you can build yours."
 date: 2026-11-05T19:00:00-05:00
-draft: true
+draft: false
 tags: ["AWS", "Hugo", "personal site", "AWS User Group", "Richmond", "S3", "CloudFront", "Terraform"]
 cover:
     image: "cover.jpg"
@@ -16,17 +16,13 @@ hero:
     photo: "photo.jpg"
 ---
 
-<!--
-DRAFT SCAFFOLD. Luke is talking Claude through the details; prose below is a rough pass to react to.
--->
-
 Tonight at the Richmond AWS User Group I gave a talk called **Your Homepage Is More Than a Resume**: how I built [lukelittle.com](https://lukelittle.com) on AWS, and how you can build yours.
 
 ![Luke at the front of the room with the Richmond AWS User Group audience](photo.jpg)
 
 ## Why a Homepage
 
-<!-- TODO(Luke): the core pitch. Why a homepage beats a resume. -->
+A resume is a list of claims. A homepage is the evidence: the projects you built, the things you wrote, the talks you gave, all in one place you control. It shows how you think, not just where you've worked.
 
 ## How This Site Is Built
 
@@ -39,8 +35,6 @@ This site is a [Hugo](https://gohugo.io/) static site, and the whole stack costs
 
 The code is all [on GitHub](https://github.com/lukelittle/homepage) if you want to borrow it.
 
-<!-- TODO(Luke): anything from the live demo / what you showed on screen -->
-
 ## Build Yours
 
 If you're a student and want the fastest path, start with the [student branding starter]({{< relref "/posts/2026/02/building-your-personal-brand-student-guide" >}}): a Hugo site on GitHub Pages you can have up in about ten minutes. When you outgrow it, move it to S3 and CloudFront.
@@ -49,6 +43,6 @@ If you're a student and want the fastest path, start with the [student branding 
 
 ## Thank You
 
-<!-- TODO(Luke): thank the host venue, sponsors, whoever's in the second photo, and the attendees -->
+Thanks to everyone who came out tonight, and for all the good questions.
 
 See you at the next Richmond AWS User Group meetup.
